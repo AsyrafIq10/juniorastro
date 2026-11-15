@@ -23,7 +23,7 @@ export const FACT_TEXT = {
       },
       {
         title: "Hidden Ice on Mars",
-        text: "Mars has lots of water ice hiding under the ground and at its poles. Future astronauts could melt it for drinking water, and split it into oxygen to breathe and hydrogen for rocket fuel.",
+        text: "Mars has lots of water ice hiding under the ground and at its poles. Future astronauts could melt it for drinking water, and split it into air to breathe and hydrogen for rocket fuel.",
       },
       {
         title: "Giant Martian Dust Devils",
@@ -36,8 +36,8 @@ export const FACT_TEXT = {
         text: "Shackleton Crater sits at the Moon's south pole. Parts of it never see sunlight, so they stay colder than -170°C and have kept water ice frozen for billions of years.",
       },
       {
-        title: "Hydroponic Farm",
-        text: "Hydroponic farms grow plants without soil! The roots sit in water full of nutrients, and bright LED lights act like sunshine. The plants also make fresh oxygen and help recycle water for the crew.",
+        title: "Greenhouse",
+        text: "Space greenhouses grow plants without soil! The roots sit in water full of nutrients, and bright LED lights act like sunshine. The plants also make fresh air and help recycle water for the crew.",
       },
       {
         title: "NASA DONKI Space Weather",
@@ -70,7 +70,7 @@ export const FACT_TEXT = {
       },
       {
         title: "Ais Tersembunyi di Marikh",
-        text: "Marikh mempunyai banyak ais air di bawah tanah dan di kutubnya. Angkasawan masa depan boleh mencairkannya untuk air minuman, dan memisahkannya kepada oksigen untuk bernafas dan hidrogen untuk bahan api roket.",
+        text: "Marikh mempunyai banyak ais air di bawah tanah dan di kutubnya. Angkasawan masa depan boleh mencairkannya untuk air minuman, dan memisahkannya kepada udara untuk bernafas dan hidrogen untuk bahan api roket.",
       },
       {
         title: "Puting Beliung Debu Marikh",
@@ -83,8 +83,8 @@ export const FACT_TEXT = {
         text: "Kawah Shackleton terletak di kutub selatan Bulan. Sesetengah bahagiannya tidak pernah disinari matahari, jadi suhunya lebih sejuk daripada -170°C dan ais air kekal beku selama berbilion tahun.",
       },
       {
-        title: "Ladang Hidroponik",
-        text: "Ladang hidroponik menanam tumbuhan tanpa tanah! Akarnya berada dalam air yang kaya dengan nutrien, dan lampu LED terang bertindak seperti cahaya matahari. Tumbuhan juga menghasilkan oksigen segar dan membantu mengitar semula air untuk kru.",
+        title: "Rumah Hijau",
+        text: "Rumah hijau angkasa menanam tumbuhan tanpa tanah! Akarnya berada dalam air yang kaya dengan nutrien, dan lampu LED terang bertindak seperti cahaya matahari. Tumbuhan juga menghasilkan udara segar dan membantu mengitar semula air untuk kru.",
       },
       {
         title: "Cuaca Angkasa DONKI NASA",
@@ -101,3 +101,10 @@ export const FACT_TEXT = {
     ],
   },
 };
+
+// Moon demo plays 3 of the 5 tasks: keep the matching fact cards
+import { MOON_TASKS_KEPT } from "./tasks";
+FACT_IMAGES.moon = FACT_IMAGES.moon.filter((_, i) => MOON_TASKS_KEPT.includes(i));
+for (const lang of Object.keys(FACT_TEXT)) {
+  FACT_TEXT[lang].moon = FACT_TEXT[lang].moon.filter((_, i) => MOON_TASKS_KEPT.includes(i));
+}

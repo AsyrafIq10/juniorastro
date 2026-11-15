@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Html, OrbitControls, Stars } from "@react-three/drei";
 import * as THREE from "three";
-import { TASKS, CHECKPOINT_RADIUS, HOME_POS, FLAG_POS, WORLD, GRAVITY } from "../data/tasks";
+import { TASKS, CHECKPOINT_RADIUS, HOME_POS, FLAG_POS, PAD_POS, WORLD, GRAVITY } from "../data/tasks";
 import { drawJalurGemilang, JalurGemilang } from "./FlagPlant";
 import { spaceAudio } from "../utils/sound";
 
@@ -76,7 +76,7 @@ function buildRocks() {
     const dist = 12 + rand() * 38;
     const x = Math.cos(angle) * dist;
     const z = Math.sin(angle) * dist;
-    const clear = [...TASKS.map((t) => t.pos), HOME_POS, FLAG_POS].filter(Boolean);
+    const clear = [...TASKS.map((t) => t.pos), HOME_POS, FLAG_POS, PAD_POS].filter(Boolean);
     if (clear.some((p) => Math.hypot(x - p.x, z - p.z) < 5)) continue;
     const y = getTerrainHeight(x, z);
     const scale = 0.35 + rand() * 1.15;
@@ -538,7 +538,7 @@ function IceProp() {
 
 function LaunchPadRocket({ ready }) {
   const glowRef = useRef();
-  const { x, z } = TASKS[TASKS.length - 1].pos;
+  const { x, z } = PAD_POS;
   const y = getTerrainHeight(x, z);
   useFrame(({ clock }) => {
     if (glowRef.current) glowRef.current.intensity = ready ? 3 + Math.sin(clock.getElapsedTime() * 6) * 1.5 : 0.6;
@@ -1223,7 +1223,7 @@ function worldData() {
     // keep the ground around the wormhole anomaly clear so the rover can reach it
     const keepClear = WORLD === "moon" ? SPACE_PIECES : [SECRET_POS];
     const rocks = buildRocks().filter((r) => keepClear.every((p) => Math.hypot(r.pos[0] - p.x, r.pos[2] - p.z) > 4.5));
-    const pad = TASKS[TASKS.length - 1].pos;
+    const pad = PAD_POS;
     const rockColliders = rocks.filter((r) => r.scale[0] > 0.6).map((r) => ({ x: r.pos[0], z: r.pos[2], r: r.scale[0] * 0.85 }));
     WORLD_CACHE[WORLD] = {
       rocks,
@@ -1958,7 +1958,7 @@ export default function MarsScene({
   const isNight = env === "night" || env === "moonNight" || env === "moonDark";
   const playing = phase === "playing";
   const allDone = taskIndex >= TASKS.length;
-  const devilCenter = TASKS[TASKS.length - 1].pos;
+  const devilCenter = PAD_POS;
 
   return (
     <div className="fixed inset-0 z-0">

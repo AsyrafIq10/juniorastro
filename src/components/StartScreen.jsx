@@ -226,7 +226,7 @@ function MenuButton({ icon: Icon, label, onClick, primary }) {
       className={`group w-full flex items-center justify-center gap-3 px-6 py-3.5 sm:py-4 rounded-2xl font-display text-lg sm:text-xl font-bold transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-300/60 ${
         primary
           ? "bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-400 hover:to-red-500 text-white shadow-[0_10px_30px_rgba(234,88,12,0.45)] border border-orange-300/60"
-          : "bg-slate-900/70 hover:bg-slate-800/85 backdrop-blur-md text-slate-100 border border-white/15 shadow-lg"
+          : "bg-slate-900/90 hover:bg-slate-800/95 backdrop-blur-md text-slate-100 border border-white/15 shadow-lg"
       }`}
     >
       <Icon className={`w-5 h-5 ${primary ? "" : "text-sky-300"} group-hover:scale-110 transition-transform`} />
@@ -274,7 +274,8 @@ export default function StartScreen({ t, onStartMars, onStartMoon, onOpenSetting
           <div key="main" className="my-auto flex flex-col items-center text-center w-full max-w-md mx-auto menu-fade-in">
             <FancyTitle text={t.gameTitle} sub={t.menu.subtitle} />
 
-            <div className="flex flex-col gap-3 w-full">
+            {/* buttons sit above the title's glow and sparks */}
+            <div className="relative z-10 flex flex-col gap-3 w-full">
               <MenuButton icon={Play} label={t.menu.startGame} onClick={() => go("missions")} primary />
               <MenuButton icon={Settings} label={t.settings} onClick={onOpenSettings} />
             </div>

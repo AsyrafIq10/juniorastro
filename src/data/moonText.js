@@ -23,14 +23,14 @@ export const MOON_TEXT = {
       stickerTag: "Special sticker",
       certLine: "Planted the Jalur Gemilang on the Moon!",
     },
-    resources: { power: "Power", oxygen: "Oxygen", food: "Food", shielding: "Shielding" },
+    resources: { power: "Power", oxygen: "Air", food: "Food", shielding: "Shielding" },
     // Radio signals take only about 1.3 seconds between the Moon and Earth
     play: { vitals: { delay: "Earth: 1.3 sec away" } },
-    modules: { habitat: "Artemis Habitat & Shield", solar: "Solar Array Field", moxie: "Water Recycler", greenhouse: "Hydroponic Farm" },
+    modules: { habitat: "Artemis Habitat & Shield", solar: "Solar Array Field", moxie: "Water Recycler", greenhouse: "Greenhouse" },
     intro: {
       title: "Welcome to Shackleton Crater, Cadet!",
       capLine:
-        "Hi! I'm Dr Farah! We landed near the Moon's south pole! Drive the rover to 5 checkpoints and keep our Power, Oxygen, Food and Shielding safe until the relief ship arrives.",
+        "Hi! I'm Dr Farah! We landed near the Moon's south pole! Drive the rover to 3 checkpoints and keep our Power, Air, Food and Shielding safe until the relief ship arrives.",
       startBtn: "Start Moon Mission",
     },
     victory: {
@@ -41,7 +41,7 @@ export const MOON_TEXT = {
     lose: {
       tips: {
         power: "Our Power hit 0! On the Moon, solar panels stop during the long lunar night, so every bit of battery counts.",
-        oxygen: "Our Oxygen hit 0! The Moon has no air at all. Ice and recycled water are how a Moon base makes fresh air.",
+        oxygen: "Our Air hit 0! The Moon has no air at all. Ice and recycled water are how a Moon base makes fresh air.",
         food: "Our Food hit 0! Supply ships take days to arrive, so astronauts always pack extra pantry food.",
         shielding: "Our Shielding hit 0! With no air or magnetic field, the Moon gets blasted by solar storms. Thick shields keep the crew safe.",
       },
@@ -49,7 +49,7 @@ export const MOON_TEXT = {
     help: {
       stats: {
         power: "Power: batteries and solar panels",
-        oxygen: "Oxygen: fresh air for the crew",
+        oxygen: "Air: fresh air for the crew to breathe",
         food: "Food: the base pantry and farm",
         shielding: "Shielding: protection from solar storms",
       },
@@ -82,13 +82,13 @@ export const MOON_TEXT = {
       skip: "Skip",
     },
     certificate: {
-      completedLine: "For completing all 5 rover tasks on the Moon and flying home safely!",
-      badges: { power: "Master Power Engineer", oxygen: "Chief Oxygen Specialist", food: "Space Chef", shielding: "Shield Commander" },
+      completedLine: "For completing all 3 rover tasks on the Moon and flying home safely!",
+      badges: { power: "Master Power Engineer", oxygen: "Chief Air Specialist", food: "Space Chef", shielding: "Shield Commander" },
     },
     blast: {
       scienceHint: "Every badge you win unlocks a rover upgrade!",
       homeCheckpoint: "Relief Ship",
-      homeText: "All 5 tasks are done. The relief ship has landed!",
+      homeText: "All 3 tasks are done. The relief ship has landed!",
       allDoneDrive: "Drive to the 🚀 relief ship to fly home!",
       env: {
         moonDark: "🌑 Pitch-black crater!",
@@ -117,7 +117,7 @@ export const MOON_TEXT = {
             label: "Run the ice drill at full power.",
             short: "Drill full power",
             play: "Hold to drill the ice. Let the drill cool when it gets hot!",
-            resultShort: "WOOHOO! Oxygen tanks topped up, but the batteries took a big hit!",
+            resultShort: "WOOHOO! Air tanks topped up, but the batteries took a big hit!",
             future: "Let's hope the Sun stays bright to recharge the batteries.",
           },
           {
@@ -125,7 +125,7 @@ export const MOON_TEXT = {
             short: "Use backup air",
             play: "Tap the 3 air-tank valves to connect them. Your gloves are wobbly!",
             resultShort: "Smart battery saving! But we dipped into our reserve air.",
-            future: "Keep an eye on that Oxygen meter!",
+            future: "Keep an eye on that Air meter!",
           },
         ],
       },
@@ -150,7 +150,7 @@ export const MOON_TEXT = {
             short: "Run the recycler",
             play: "Drag the water drops into the recycler until the gauge reaches 98%!",
             resultShort: "Splish-splash, fresh water and fresh air! The batteries dipped a little.",
-            future: "More oxygen in the tanks for the storm ahead.",
+            future: "More air in the tanks for the storm ahead.",
           },
           {
             label: "Use the stored water tanks.",
@@ -181,7 +181,7 @@ export const MOON_TEXT = {
             label: "Prepare now: pile Moon-dirt bags on the shelter.",
             short: "Build the shield",
             play: "Hold to shovel Moon-dirt into bags. Rest before you get too tired!",
-            resultShort: "Shelter reinforced! The spacesuits used plenty of oxygen, though.",
+            resultShort: "Shelter reinforced! The spacesuits used plenty of air, though.",
             future: "A strong shelter for when the storm hits.",
           },
           {
@@ -328,13 +328,13 @@ export const MOON_TEXT = {
       stickerTag: "Pelekat istimewa",
       certLine: "Memacak Jalur Gemilang di Bulan!",
     },
-    resources: { power: "Kuasa", oxygen: "Oksigen", food: "Makanan", shielding: "Perisai" },
+    resources: { power: "Kuasa", oxygen: "Udara", food: "Makanan", shielding: "Perisai" },
     play: { vitals: { delay: "Bumi: 1.3 saat jauhnya" } },
-    modules: { habitat: "Habitat Artemis & Perisai", solar: "Ladang Panel Suria", moxie: "Pengitar Semula Air", greenhouse: "Ladang Hidroponik" },
+    modules: { habitat: "Habitat Artemis & Perisai", solar: "Ladang Panel Suria", moxie: "Pengitar Semula Air", greenhouse: "Rumah Hijau" },
     intro: {
       title: "Selamat Datang ke Kawah Shackleton, Kadet!",
       capLine:
-        "Hai! Saya Dr Farah! Kita mendarat dekat kutub selatan Bulan! Pandu rover ke 5 pusat pemeriksaan dan jaga Kuasa, Oksigen, Makanan dan Perisai sehingga kapal bantuan tiba.",
+        "Hai! Saya Dr Farah! Kita mendarat dekat kutub selatan Bulan! Pandu rover ke 3 pusat pemeriksaan dan jaga Kuasa, Udara, Makanan dan Perisai sehingga kapal bantuan tiba.",
       startBtn: "Mula Misi Bulan",
     },
     victory: {
@@ -345,7 +345,7 @@ export const MOON_TEXT = {
     lose: {
       tips: {
         power: "Kuasa kita mencecah 0! Di Bulan, panel suria berhenti semasa malam bulan yang panjang, jadi setiap tenaga bateri penting.",
-        oxygen: "Oksigen kita mencecah 0! Bulan langsung tiada udara. Ais dan air kitar semula ialah cara pangkalan Bulan membuat udara segar.",
+        oxygen: "Udara kita mencecah 0! Bulan langsung tiada udara. Ais dan air kitar semula ialah cara pangkalan Bulan membuat udara segar.",
         food: "Makanan kita mencecah 0! Kapal bekalan mengambil masa berhari-hari, jadi angkasawan sentiasa membawa makanan tambahan.",
         shielding: "Perisai kita mencecah 0! Tanpa udara atau medan magnet, Bulan dihentam ribut suria. Perisai tebal melindungi kru.",
       },
@@ -353,7 +353,7 @@ export const MOON_TEXT = {
     help: {
       stats: {
         power: "Kuasa: bateri dan panel suria",
-        oxygen: "Oksigen: udara segar untuk kru",
+        oxygen: "Udara: udara segar untuk kru bernafas",
         food: "Makanan: stor dan ladang pangkalan",
         shielding: "Perisai: perlindungan daripada ribut suria",
       },
@@ -386,13 +386,13 @@ export const MOON_TEXT = {
       skip: "Langkau",
     },
     certificate: {
-      completedLine: "Kerana menyelesaikan kesemua 5 tugasan rover di Bulan dan terbang pulang dengan selamat!",
-      badges: { power: "Jurutera Kuasa Pakar", oxygen: "Ketua Pakar Oksigen", food: "Cef Angkasa", shielding: "Komander Perisai" },
+      completedLine: "Kerana menyelesaikan kesemua 3 tugasan rover di Bulan dan terbang pulang dengan selamat!",
+      badges: { power: "Jurutera Kuasa Pakar", oxygen: "Ketua Pakar Udara", food: "Cef Angkasa", shielding: "Komander Perisai" },
     },
     blast: {
       scienceHint: "Setiap lencana yang dimenangi membuka naik taraf rover!",
       homeCheckpoint: "Kapal Bantuan",
-      homeText: "Kesemua 5 tugasan selesai. Kapal bantuan sudah mendarat!",
+      homeText: "Kesemua 3 tugasan selesai. Kapal bantuan sudah mendarat!",
       allDoneDrive: "Pandu ke kapal bantuan 🚀 untuk terbang pulang!",
       env: {
         moonDark: "🌑 Kawah gelap gelita!",
@@ -421,7 +421,7 @@ export const MOON_TEXT = {
             label: "Jalankan gerudi ais dengan kuasa penuh.",
             short: "Gerudi kuasa penuh",
             play: "Tahan untuk menggerudi ais. Biarkan gerudi sejuk apabila ia panas!",
-            resultShort: "YAHOO! Tangki oksigen penuh, tapi bateri banyak berkurang!",
+            resultShort: "YAHOO! Tangki udara penuh, tapi bateri banyak berkurang!",
             future: "Harap matahari kekal cerah untuk mengecas bateri.",
           },
           {
@@ -429,7 +429,7 @@ export const MOON_TEXT = {
             short: "Guna udara simpanan",
             play: "Ketik 3 injap tangki udara untuk menyambungnya. Sarung tangan anda bergoyang!",
             resultShort: "Bijak menjimat bateri! Tapi kita guna udara simpanan.",
-            future: "Perhatikan meter Oksigen!",
+            future: "Perhatikan meter Udara!",
           },
         ],
       },
@@ -454,7 +454,7 @@ export const MOON_TEXT = {
             short: "Jalankan pengitar",
             play: "Seret titisan air ke dalam pengitar sehingga meter mencapai 98%!",
             resultShort: "Air segar dan udara segar! Bateri berkurang sedikit.",
-            future: "Lebih oksigen dalam tangki untuk ribut nanti.",
+            future: "Lebih udara dalam tangki untuk ribut nanti.",
           },
           {
             label: "Guna tangki air simpanan.",
@@ -485,7 +485,7 @@ export const MOON_TEXT = {
             label: "Bersedia sekarang: susun beg tanah Bulan pada tempat perlindungan.",
             short: "Bina perisai",
             play: "Tahan untuk menyodok tanah Bulan ke dalam beg. Berehat sebelum terlalu penat!",
-            resultShort: "Tempat perlindungan diperkukuh! Tapi sut angkasa guna banyak oksigen.",
+            resultShort: "Tempat perlindungan diperkukuh! Tapi sut angkasa guna banyak udara.",
             future: "Tempat perlindungan yang kuat apabila ribut melanda.",
           },
           {
@@ -611,3 +611,9 @@ export const MOON_TEXT = {
     ],
   },
 };
+
+// Moon demo plays 3 of the 5 tasks: keep the matching task text
+import { MOON_TASKS_KEPT } from "./tasks";
+for (const lang of Object.keys(MOON_TEXT)) {
+  MOON_TEXT[lang].tasks = MOON_TEXT[lang].tasks.filter((_, i) => MOON_TASKS_KEPT.includes(i));
+}

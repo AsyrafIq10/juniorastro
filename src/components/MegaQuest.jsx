@@ -176,7 +176,7 @@ function GearlordModel({ fightRef, stage }) {
   );
 }
 
-function Trophy({ show, from, to }) {
+export function Trophy({ show, from, to }) {
   const ref = useRef();
   const start = useRef(null);
   useFrame(({ clock }) => {
@@ -196,23 +196,46 @@ function Trophy({ show, from, to }) {
   });
   return (
     <group ref={ref} visible={false}>
+      {/* cup: open cone from r=0.2 (y=0.2) to r=0.45 (y=0.9), closed at the bottom, with a rolled rim */}
       <mesh position={[0, 0.55, 0]}>
-        <cylinderGeometry args={[0.45, 0.2, 0.7, 20, 1, true]} />
+        <cylinderGeometry args={[0.45, 0.2, 0.7, 28, 1, true]} />
         <meshStandardMaterial color="#facc15" metalness={0.9} roughness={0.15} emissive="#ca8a04" emissiveIntensity={0.6} side={THREE.DoubleSide} />
       </mesh>
-      {[-0.5, 0.5].map((x) => (
-        <mesh key={x} position={[x, 0.6, 0]} rotation={[0, 0, Math.PI / 2]}>
-          <torusGeometry args={[0.18, 0.05, 8, 16, Math.PI]} />
-          <meshStandardMaterial color="#facc15" metalness={0.9} roughness={0.15} />
+      <mesh position={[0, 0.2, 0]}>
+        <sphereGeometry args={[0.2, 20, 10, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2]} />
+        <meshStandardMaterial color="#facc15" metalness={0.9} roughness={0.15} emissive="#ca8a04" emissiveIntensity={0.4} />
+      </mesh>
+      <mesh position={[0, 0.9, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[0.45, 0.035, 10, 32]} />
+        <meshStandardMaterial color="#fde68a" metalness={0.9} roughness={0.1} />
+      </mesh>
+      {/* handles: half-rings mirrored left/right, both ends sunk into the cup wall */}
+      {[
+        [0.32, -Math.PI / 2],
+        [-0.32, Math.PI / 2],
+      ].map(([x, rz]) => (
+        <mesh key={x} position={[x, 0.66, 0]} rotation={[0, 0, rz]}>
+          <torusGeometry args={[0.17, 0.045, 10, 20, Math.PI]} />
+          <meshStandardMaterial color="#facc15" metalness={0.9} roughness={0.15} emissive="#ca8a04" emissiveIntensity={0.4} />
         </mesh>
       ))}
-      <mesh position={[0, 0.12, 0]}>
-        <cylinderGeometry args={[0.08, 0.08, 0.3, 10]} />
-        <meshStandardMaterial color="#facc15" metalness={0.9} />
+      {/* star on the front */}
+      <mesh position={[0, 0.6, 0.34]} rotation={[0.3, 0, 0]}>
+        <octahedronGeometry args={[0.09, 0]} />
+        <meshStandardMaterial color="#fff7ed" emissive="#fde047" emissiveIntensity={1.5} />
       </mesh>
-      <mesh position={[0, -0.05, 0]}>
-        <boxGeometry args={[0.5, 0.12, 0.5]} />
-        <meshStandardMaterial color="#78350f" />
+      {/* stem + two-tier base */}
+      <mesh position={[0, 0.05, 0]}>
+        <cylinderGeometry args={[0.06, 0.1, 0.3, 14]} />
+        <meshStandardMaterial color="#facc15" metalness={0.9} roughness={0.15} />
+      </mesh>
+      <mesh position={[0, -0.13, 0]}>
+        <cylinderGeometry args={[0.22, 0.26, 0.08, 24]} />
+        <meshStandardMaterial color="#facc15" metalness={0.9} roughness={0.15} />
+      </mesh>
+      <mesh position={[0, -0.27, 0]}>
+        <boxGeometry args={[0.6, 0.2, 0.6]} />
+        <meshStandardMaterial color="#78350f" roughness={0.6} />
       </mesh>
       <pointLight color="#fde047" intensity={6} distance={5} />
     </group>

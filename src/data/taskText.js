@@ -179,7 +179,7 @@ export const TASK_TEXT = {
       vitals: {
         heart: "Heart",
         temp: "Suit",
-        o2: "O₂",
+        o2: "Air",
         delay: "Earth: 14 min away"
       }
     },
@@ -468,7 +468,7 @@ export const TASK_TEXT = {
           },
         ],
         learning:
-          "Dust devils are real on Mars, and some are taller than skyscrapers! NASA's Spirit and Opportunity rovers got lucky: passing dust devils blew dust off their solar panels and gave them more power. NASA also plans to bring Perseverance's sample tubes back to Earth one day!",
+          "Dust devils are real on Mars, and some are taller than tall buildings! NASA's Spirit and Opportunity rovers got lucky: passing dust devils blew dust off their solar panels and gave them more power. NASA also plans to bring Perseverance's sample tubes back to Earth one day!",
       },
     ],
   },
@@ -650,7 +650,7 @@ export const TASK_TEXT = {
       vitals: {
         heart: "Jantung",
         temp: "Sut",
-        o2: "O₂",
+        o2: "Udara",
         delay: "Bumi: 14 minit jauhnya"
       }
     },
@@ -939,7 +939,7 @@ export const TASK_TEXT = {
           },
         ],
         learning:
-          "Puting beliung debu memang wujud di Marikh, malah ada yang lebih tinggi daripada bangunan pencakar langit! Rover Spirit dan Opportunity NASA bernasib baik: puting beliung yang lalu meniup debu dari panel suria mereka dan memberi lebih kuasa. NASA juga merancang untuk membawa pulang tiub sampel Perseverance ke Bumi satu hari nanti!",
+          "Puting beliung debu memang wujud di Marikh, malah ada yang lebih tinggi daripada bangunan tinggi! Rover Spirit dan Opportunity NASA bernasib baik: puting beliung yang lalu meniup debu dari panel suria mereka dan memberi lebih kuasa. NASA juga merancang untuk membawa pulang tiub sampel Perseverance ke Bumi satu hari nanti!",
       },
     ],
   },

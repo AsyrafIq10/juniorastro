@@ -11,7 +11,7 @@ const BASE = {
     menu: {
       subtitle: "Mission Control • Earth Orbit",
       baseLabel: "Earth Mission Control",
-      suitChecks: ["Helmet on", "Oxygen full", "Gloves sealed", "Ready for launch!"],
+      suitChecks: ["Helmet on", "Air tanks full", "Gloves sealed", "Ready for launch!"],
       startGame: "Start Game",
       credits: "Credits",
       back: "Back",
@@ -25,8 +25,11 @@ const BASE = {
     creditsModal: {
       title: "Credits",
       sections: [
-        { heading: "Game Design & Development", items: ["Jezero 6 Mission Team"] },
+        { heading: "Team Interstellar V", items: ["Abdul Rahim", "Asyraf Iqbal", "Batrisya Qistina", "Maisarah", "Qhairunnisa Shahirah"] },
+        { heading: "Game Design & Development", items: ["Interstellar V"] },
         { heading: "Science & Data", items: ["NASA Perseverance Rover (MOXIE & MEDA)", "NASA DONKI Space Weather Database", "NASA Open Science Data Repository (OSDR)"] },
+        { heading: "NASA Data", items: ["3.2.2 Solar Panels & Arrays (NASA Small Spacecraft Technology: Power)", "OSD-883: Analysis of Vegetable Seedlings Grown in Contact with Apollo 14 Lunar Surface Fines", "LCROSS (Lunar Crater Observation and Sensing Satellite)", "NASA Achieves Water Recovery Milestone on International Space Station", "Thermal Control on the Lunar Surface (NASA Technical Reports Server)", "10 Things: Mars Helicopter", "Mars Phoenix", "Mars Rock Samples"] },
+        { heading: "Space Agency Partner & Other Data", items: ["The Case for Clear Dust-Repellant Coating (Voyager Technologies)"] },
         { heading: "Built With", items: ["React", "Three.js & React Three Fiber", "Tailwind CSS", "Lucide Icons", "Web Audio API (all sounds synthesized)"] },
       ],
       thanks: "Thank you for playing, Cadet! 🚀",
@@ -73,7 +76,7 @@ const BASE = {
       habitat: "Habitat Dome & Shield",
       solar: "Solar Array Field",
       moxie: "MOXIE Air-Maker",
-      greenhouse: "Hydroponic Greenhouse",
+      greenhouse: "Greenhouse",
     },
     intro: {
       title: "Welcome to Jezero 6, Cadet!",
@@ -126,7 +129,7 @@ const BASE = {
       items: [
         {
           name: "NASA Perseverance Rover (MOXIE & MEDA)",
-          desc: "MOXIE demonstrated making oxygen from Martian CO₂, while MEDA measures Mars weather, dust, and freezing temperatures.",
+          desc: "MOXIE showed it can turn Mars's thin air into air we can breathe, while MEDA measures Mars weather, dust, and freezing temperatures.",
         },
         {
           name: "NASA DONKI Space Weather Database",
@@ -150,7 +153,7 @@ const BASE = {
     menu: {
       subtitle: "Kawalan Misi • Orbit Bumi",
       baseLabel: "Kawalan Misi Bumi",
-      suitChecks: ["Topi keledar dipakai", "Oksigen penuh", "Sarung tangan dikunci", "Sedia untuk dilancarkan!"],
+      suitChecks: ["Topi keledar dipakai", "Tangki udara penuh", "Sarung tangan dikunci", "Sedia untuk dilancarkan!"],
       startGame: "Mula Permainan",
       credits: "Kredit",
       back: "Kembali",
@@ -164,8 +167,11 @@ const BASE = {
     creditsModal: {
       title: "Kredit",
       sections: [
-        { heading: "Reka Bentuk & Pembangunan Permainan", items: ["Pasukan Misi Jezero 6"] },
+        { heading: "Pasukan Interstellar V", items: ["Abdul Rahim", "Asyraf Iqbal", "Batrisya Qistina", "Maisarah", "Qhairunnisa Shahirah"] },
+        { heading: "Reka Bentuk & Pembangunan Permainan", items: ["Interstellar V"] },
         { heading: "Sains & Data", items: ["Rover Perseverance NASA (MOXIE & MEDA)", "Pangkalan Data Cuaca Angkasa DONKI NASA", "Repositori Data Sains Terbuka NASA (OSDR)"] },
+        { heading: "Data NASA", items: ["3.2.2 Solar Panels & Arrays (NASA Small Spacecraft Technology: Power)", "OSD-883: Analysis of Vegetable Seedlings Grown in Contact with Apollo 14 Lunar Surface Fines", "LCROSS (Lunar Crater Observation and Sensing Satellite)", "NASA Achieves Water Recovery Milestone on International Space Station", "Thermal Control on the Lunar Surface (NASA Technical Reports Server)", "10 Things: Mars Helicopter", "Mars Phoenix", "Mars Rock Samples"] },
+        { heading: "Data Rakan Agensi Angkasa & Lain-lain", items: ["The Case for Clear Dust-Repellant Coating (Voyager Technologies)"] },
         { heading: "Dibina Dengan", items: ["React", "Three.js & React Three Fiber", "Tailwind CSS", "Ikon Lucide", "Web Audio API (semua bunyi disintesis)"] },
       ],
       thanks: "Terima kasih kerana bermain, Kadet! 🚀",
@@ -212,7 +218,7 @@ const BASE = {
       habitat: "Kubah Habitat & Perisai",
       solar: "Medan Panel Suria",
       moxie: "Penjana Udara MOXIE",
-      greenhouse: "Rumah Hijau Hidroponik",
+      greenhouse: "Rumah Hijau",
     },
     intro: {
       title: "Selamat Datang ke Jezero 6, Kadet!",
@@ -265,7 +271,7 @@ const BASE = {
       items: [
         {
           name: "Rover Perseverance NASA (MOXIE & MEDA)",
-          desc: "MOXIE membuktikan penghasilan oksigen daripada CO₂ Marikh, manakala MEDA mengukur cuaca, debu, dan suhu beku Marikh.",
+          desc: "MOXIE membuktikan udara Marikh yang nipis boleh ditukar menjadi udara untuk bernafas, manakala MEDA mengukur cuaca, debu, dan suhu beku Marikh.",
         },
         {
           name: "Pangkalan Data Cuaca Angkasa DONKI NASA",

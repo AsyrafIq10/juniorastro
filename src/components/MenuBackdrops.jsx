@@ -130,9 +130,6 @@ function RocketScene() {
             <rect x="-95" y="610" width="190" height="20" fill="#2563eb" />
             <circle cx="0" cy="330" r="46" fill="#38bdf8" stroke="#0f172a" strokeWidth="10" />
             <circle cx="-14" cy="316" r="14" fill="#e0f2fe" />
-            <text x="0" y="440" textAnchor="middle" fontFamily="Fredoka, sans-serif" fontWeight="700" fontSize="34" fill="#1e293b">
-              JEZERO 6
-            </text>
             <path d="M-95 560 L-190 720 L-95 700 Z" fill="#ef4444" stroke="#0f172a" strokeWidth="8" />
             <path d="M95 560 L190 720 L95 700 Z" fill="#ef4444" stroke="#0f172a" strokeWidth="8" />
             <rect x="-70" y="700" width="140" height="40" rx="8" fill="#475569" stroke="#0f172a" strokeWidth="8" />
@@ -472,7 +469,7 @@ function SuitUpScene({ checks }) {
   );
 }
 
-export default function MenuBackdrops({ checks = ["Helmet", "Oxygen", "Gloves", "Ready!"] }) {
+export default function MenuBackdrops({ checks = ["Helmet", "Air", "Gloves", "Ready!"] }) {
   // idx = scene on screen; plays[i] = how many times scene i has started (its key, so it replays each loop)
   const [{ idx, plays }, setState] = useState({ idx: 0, plays: [1, 0, 0, 0, 0] });
   useEffect(() => {

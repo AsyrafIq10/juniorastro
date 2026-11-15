@@ -124,7 +124,7 @@ export const SECRET_TEXT = {
 export const SECRET_QUIZ = {
   en: [
     { q: "Which planet is called the Red Planet?", a: ["Venus", "Mars", "Jupiter"], c: 1 },
-    { q: "What do astronauts need to breathe in space?", a: ["Oxygen", "Helium", "Smoke"], c: 0 },
+    { q: "What do astronauts need to breathe in space?", a: ["Air", "Helium", "Smoke"], c: 0 },
     { q: "What is the closest star to Earth?", a: ["The Moon", "Polaris", "The Sun"], c: 2 },
     { q: "Which is the biggest planet in our Solar System?", a: ["Jupiter", "Earth", "Mercury"], c: 0 },
     { q: "Why do things float inside a spaceship in orbit?", a: ["There is no air", "Everything is falling together (free fall)", "Magnets"], c: 1 },
@@ -132,7 +132,7 @@ export const SECRET_QUIZ = {
   ],
   ms: [
     { q: "Planet manakah yang digelar Planet Merah?", a: ["Zuhrah", "Marikh", "Musytari"], c: 1 },
-    { q: "Apakah yang angkasawan perlukan untuk bernafas di angkasa?", a: ["Oksigen", "Helium", "Asap"], c: 0 },
+    { q: "Apakah yang angkasawan perlukan untuk bernafas di angkasa?", a: ["Udara", "Helium", "Asap"], c: 0 },
     { q: "Apakah bintang yang paling dekat dengan Bumi?", a: ["Bulan", "Polaris", "Matahari"], c: 2 },
     { q: "Planet manakah yang paling besar dalam Sistem Suria?", a: ["Musytari", "Bumi", "Utarid"], c: 0 },
     { q: "Kenapa barang terapung di dalam kapal angkasa yang mengorbit?", a: ["Tiada udara", "Semuanya jatuh bersama (jatuh bebas)", "Magnet"], c: 1 },

@@ -40,6 +40,7 @@ const MARS = {
   upgradesFrom: "science",
   repairCost: { supplies: -10 },
   homePos: { x: 9, z: -18.5 },
+  padPos: { x: 3, z: -22 }, // rocket launch pad (next to the last task)
   flagPos: null,
   gravity: 3.71,
   tasks: [
@@ -133,6 +134,7 @@ const MOON = {
   upgradesFrom: "badges",
   repairCost: { oxygen: -10 },
   homePos: { x: -3, z: 17.5 },
+  padPos: { x: 2, z: 22 }, // relief ship landing pad
   // After the 5 tasks: plant Malaysia's flag here before the relief ship can leave
   flagPos: { x: -9, z: 12.5 },
   gravity: 1.62,
@@ -210,6 +212,11 @@ const MOON = {
   ],
 };
 
+// Moon demo: only 3 of the 5 designed tasks are played (Water Recycler, DONKI Early Warning, Dusty Solar Panels).
+// Their text arrays (moonText.js, factText.js) are trimmed with the same list.
+export const MOON_TASKS_KEPT = [1, 2, 3];
+MOON.tasks = MOON.tasks.filter((_, i) => MOON_TASKS_KEPT.includes(i));
+
 const MISSIONS = { mars: MARS, moon: MOON };
 
 // ---------- Live exports (active mission) ----------
@@ -222,6 +229,7 @@ export let UPGRADES_FROM = MARS.upgradesFrom;
 export let REPAIR_COST = MARS.repairCost;
 export let HOME_POS = MARS.homePos;
 export let FLAG_POS = MARS.flagPos;
+export let PAD_POS = MARS.padPos;
 export let GRAVITY = MARS.gravity;
 export let TASKS = MARS.tasks;
 
@@ -235,6 +243,7 @@ export function setActiveMission(id) {
   REPAIR_COST = m.repairCost;
   HOME_POS = m.homePos;
   FLAG_POS = m.flagPos;
+  PAD_POS = m.padPos;
   GRAVITY = m.gravity;
   TASKS = m.tasks;
   setEventsFor(m.id);
