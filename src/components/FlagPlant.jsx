@@ -81,7 +81,7 @@ export function drawJalurGemilang(ctx, w, h) {
 // ===== Hold-to-plant screen =====
 const PLANT_RATE = 0.34; // ~3 seconds of holding
 
-export default function FlagPlantModal({ t, soundOn, onDone }) {
+export default function FlagPlantModal({ t, soundOn, onDone, onCancel, cancelLabel }) {
   const f = t.flag;
   const [stage, setStage] = useState("hold"); // hold | raise | done
   const [progress, setProgress] = useState(0);
@@ -165,6 +165,15 @@ export default function FlagPlantModal({ t, soundOn, onDone }) {
         <div className="flex flex-wrap items-center gap-2 mb-2">
           <span className="px-3 py-1 rounded-full bg-red-500 text-white text-xs font-extrabold uppercase tracking-wider">🚩 {f.checkpoint}</span>
           <h2 className="font-display text-lg sm:text-2xl font-bold text-white">{f.holdTitle}</h2>
+          {stage === "hold" && onCancel && (
+            <button
+              type="button"
+              onClick={onCancel}
+              className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-white/20 text-slate-100 text-xs sm:text-sm font-extrabold transition"
+            >
+              ✖ {cancelLabel || "Cancel task"}
+            </button>
+          )}
         </div>
 
         <div className="relative rounded-2xl overflow-hidden border-2 border-white/15">

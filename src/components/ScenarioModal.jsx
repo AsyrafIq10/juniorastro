@@ -33,7 +33,7 @@ function MiniEffects({ effects }) {
   );
 }
 
-export default function ScenarioModal({ t, taskIndex, revisit, soundOn, badgeEarned, onChoose, onFinish, onSfx }) {
+export default function ScenarioModal({ t, taskIndex, revisit, soundOn, badgeEarned, onChoose, onFinish, onSfx, onCancel }) {
   const b = t.blast;
   const copy = t.tasks[taskIndex];
   const task = TASKS[taskIndex];
@@ -67,6 +67,16 @@ export default function ScenarioModal({ t, taskIndex, revisit, soundOn, badgeEar
           </span>
           {envLabel && <span className="px-3 py-1 rounded-full bg-rose-500/20 border border-rose-400/50 text-rose-200 text-xs font-extrabold">{envLabel}</span>}
           <h2 className="font-display text-lg sm:text-2xl font-bold text-white">{copy.short || copy.title}</h2>
+          {/* Leave without finishing: nothing changes, the task waits for you */}
+          {stage !== "result" && onCancel && (
+            <button
+              type="button"
+              onClick={onCancel}
+              className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-white/20 text-slate-100 text-xs sm:text-sm font-extrabold transition"
+            >
+              ✖ {b.cancelTask || "Cancel task"}
+            </button>
+          )}
         </div>
 
         {stage === "problem" && (

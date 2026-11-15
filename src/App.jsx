@@ -951,6 +951,13 @@ export default function App() {
           onSfx={playSfx}
           onChoose={handleChoose}
           onFinish={handleScenarioFinish}
+          onCancel={() => {
+            // close the task with no changes; the checkpoint stays open for later
+            stopSpeaking();
+            setScenario(null);
+            playSfx("click");
+            showToast(`🚙 ${t.blast.cancelToast}`);
+          }}
         />
       )}
 
@@ -992,6 +999,12 @@ export default function App() {
         <FlagPlantModal
           t={t}
           soundOn={soundOn}
+          cancelLabel={t.blast.cancelTask}
+          onCancel={() => {
+            setFlagModal(false);
+            playSfx("click");
+            showToast(`🚙 ${t.blast.cancelToast}`);
+          }}
           onDone={() => {
             setFlagModal(false);
             setFlagPlanted(true);
