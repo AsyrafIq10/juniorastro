@@ -1,4 +1,4 @@
-// Cap reads text aloud with the browser's built-in text-to-speech (no audio files, works offline).
+// Dr Farah reads text aloud with the browser's built-in text-to-speech (no audio files, works offline).
 // English uses an en voice; Bahasa Melayu prefers ms, then id (very close), then any voice.
 import { useEffect } from "react";
 
@@ -14,14 +14,33 @@ const clean = (text) =>
     .replace(/\s+/g, " ")
     .trim();
 
+// Dr Farah is a woman: always prefer a female voice. Browsers don't expose a voice's gender,
+// so we match well-known female voice names (Windows, macOS/iOS, Android/Chrome) and avoid male ones.
+const FEMALE_VOICES =
+  /female|woman|zira|aria|jenny|michelle|sonia|libby|hazel|susan|natasha|clara|emma|ava|ana|samantha|karen|moira|tessa|fiona|victoria|veena|kate|serena|allison|susan|joanna|salli|kimberly|ivy|yasmin|gadis|damayanti|amira|nur|siti|google uk english female|google us english/i;
+const MALE_VOICES = /\bmale\b|david|mark|guy|ryan|daniel|alex|fred|george|james|thomas|tom|arthur|aaron|oliver|rishi|osman|ardi|christopher|eric|roger|steffan|brian|matthew|justin|joey|google uk english male/i;
+
 function pickVoice(lang) {
   const voices = window.speechSynthesis.getVoices();
   const prefs = lang === "ms" ? ["ms", "id"] : ["en"];
   for (const p of prefs) {
-    const v = voices.find((x) => x.lang?.toLowerCase().startsWith(p) && /female|google|natural/i.test(x.name)) || voices.find((x) => x.lang?.toLowerCase().startsWith(p));
-    if (v) return v;
+    const local = voices.filter((x) => x.lang?.toLowerCase().replace("_", "-").startsWith(p));
+    const female = local.find((x) => FEMALE_VOICES.test(x.name) && !MALE_VOICES.test(x.name));
+    if (female) return female;
+    const notMale = local.find((x) => !MALE_VOICES.test(x.name));
+    if (notMale) return notMale;
   }
-  return null;
+  // No female voice for Malay? Use a female English voice rather than a male one.
+  return voices.find((x) => x.lang?.toLowerCase().startsWith("en") && FEMALE_VOICES.test(x.name) && !MALE_VOICES.test(x.name)) || null;
+}
+// Voices load asynchronously in some browsers: warm the list up early
+if (supported()) {
+  try {
+    window.speechSynthesis.getVoices();
+    window.speechSynthesis.addEventListener?.("voiceschanged", () => window.speechSynthesis.getVoices());
+  } catch {
+    // ignore
+  }
 }
 
 export function configureSpeech({ lang, auto, enabled }) {
@@ -42,7 +61,8 @@ export function speak(text) {
     const v = pickVoice(state.lang);
     if (v) u.voice = v;
     u.rate = 0.95;
-    u.pitch = 1.15; // a friendly robot buddy
+    // Female voice found: natural pitch. Only a fallback (possibly male) voice gets lifted higher.
+    u.pitch = v && FEMALE_VOICES.test(v.name) ? 1.08 : 1.35;
     window.speechSynthesis.speak(u);
   } catch {
     // ignore

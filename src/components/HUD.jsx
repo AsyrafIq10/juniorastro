@@ -171,12 +171,14 @@ const CP_STYLE = {
   home: { icon: "🚀", cls: "from-sky-400 to-cyan-400 text-slate-950" },
   flag: { icon: "🚩", cls: "from-red-500 to-amber-400 text-white" },
   secret: { icon: "🌀", cls: "from-violet-600 to-fuchsia-500 text-white" },
+  piece: { icon: "✨", cls: "from-indigo-600 to-slate-700 text-white" },
+  mega: { icon: "🌀", cls: "from-red-600 to-rose-500 text-white" },
 };
 
 // "Press E" prompt when the rover is parked inside a checkpoint ring
 function EnterPrompt({ t, cp, onEnter }) {
   const st = CP_STYLE[cp.kind];
-  const label = cp.kind === "secret" ? "???" : cp.kind === "task" ? t.tasks[cp.index].short : cp.kind === "quiz" ? `${t.blast.quizStation}: ${t.tasks[cp.index].quiz.badge}` : cp.kind === "flag" ? t.flag.plantLabel : t.blast.homeCheckpoint;
+  const label = cp.kind === "secret" || cp.kind === "piece" || cp.kind === "mega" ? "???" : cp.kind === "task" ? t.tasks[cp.index].short : cp.kind === "quiz" ? `${t.blast.quizStation}: ${t.tasks[cp.index].quiz.badge}` : cp.kind === "flag" ? t.flag.plantLabel : t.blast.homeCheckpoint;
   return (
     <div className="fixed inset-x-0 bottom-28 sm:bottom-32 z-20 flex justify-center px-4 pointer-events-none">
       <button
@@ -327,6 +329,7 @@ export default function HUD({
   onHelp,
   onOpenLog,
   secretBadge = false,
+  megaBadge = false,
 }) {
   const setDpad = (dir, pressed) => {
     onDpadChange((prev) => ({ ...prev, [dir]: pressed }));
@@ -364,6 +367,11 @@ export default function HUD({
                     {task.badge}
                   </span>
                 ))}
+                {megaBadge && (
+                  <span title="MEGA" className="ml-0.5 text-sm leading-none">
+                    🏆
+                  </span>
+                )}
                 {secretBadge && (
                   <span title="?" className="ml-0.5 w-4 h-4 rounded-full bg-gradient-to-br from-violet-500 to-cyan-400 text-[10px] font-extrabold text-white flex items-center justify-center">
                     ?

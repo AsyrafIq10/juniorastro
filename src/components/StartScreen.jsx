@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { Settings, Rocket, Sparkles, Users, ArrowLeft, Play } from "lucide-react";
+import MenuBackdrops from "./MenuBackdrops";
 
 function Starfield() {
   const stars = useMemo(
@@ -141,6 +142,82 @@ export function EarthBackdrop() {
   );
 }
 
+// Big cartoon title: gold-to-blue letters with a white outline and navy 3D edge,
+// bursting out of a glowing star flare with sparks (inspired by the reference poster)
+const TITLE_CSS = `
+.ft-wrap { position:relative; display:inline-block; white-space:nowrap; transform: skewX(-7deg) rotate(-2deg); }
+.ft-letter {
+  display:inline-block; font-family: Fredoka, sans-serif; font-weight:700; line-height:1;
+  font-size: clamp(2.8rem, 10vw, 6.5rem); letter-spacing:.01em;
+  background: linear-gradient(180deg, #fffbe0 0%, #fde047 30%, #f59e0b 50%, #7dd3fc 52%, #3b82f6 78%, #1d4ed8 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter: drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff) drop-shadow(0 3px 0 #fff) drop-shadow(0 -3px 0 #fff)
+          drop-shadow(0 7px 0 #1e3a8a) drop-shadow(0 0 22px rgba(251,191,36,.75));
+  animation: ft-pop .7s cubic-bezier(.2,1.6,.4,1) both, ft-wave 2.8s ease-in-out infinite;
+}
+.ft-space { display:inline-block; width:.28em; font-size: clamp(2.8rem, 10vw, 6.5rem); }
+@keyframes ft-pop { from { transform: translateY(-60px) scale(.3) rotate(-20deg); opacity:0; } to { transform:none; opacity:1; } }
+@keyframes ft-wave { 0%,100% { translate: 0 0; } 50% { translate: 0 -8px; } }
+.ft-burst { position:absolute; left:50%; top:50%; width:150%; aspect-ratio:1; transform:translate(-50%,-50%); pointer-events:none; z-index:-1; }
+.ft-rays { position:absolute; inset:0; border-radius:50%;
+  background: repeating-conic-gradient(from 0deg, rgba(253,224,71,.55) 0deg 6deg, rgba(251,146,60,0) 6deg 18deg);
+  -webkit-mask-image: radial-gradient(circle, #000 18%, transparent 62%); mask-image: radial-gradient(circle, #000 18%, transparent 62%);
+  animation: ft-spin 18s linear infinite; }
+.ft-core { position:absolute; left:50%; top:50%; width:58%; height:38%; transform:translate(-50%,-50%); border-radius:50%;
+  background: radial-gradient(ellipse, rgba(255,251,235,.95) 0%, rgba(253,186,116,.7) 35%, rgba(249,115,22,0) 70%);
+  animation: ft-pulse 2.2s ease-in-out infinite; }
+@keyframes ft-spin { to { transform: rotate(360deg); } }
+@keyframes ft-pulse { 0%,100% { opacity:.75; transform:translate(-50%,-50%) scale(.95); } 50% { opacity:1; transform:translate(-50%,-50%) scale(1.08); } }
+.ft-spark { position:absolute; left:50%; top:50%; width:7px; height:7px; border-radius:50%; background:#fff7cc;
+  box-shadow: 0 0 10px 3px rgba(253,224,71,.9); animation: ft-fly 2.6s ease-out infinite; opacity:0; }
+@keyframes ft-fly { 0% { transform: translate(-50%,-50%) translate(0,0) scale(1); opacity:0; } 10% { opacity:1; }
+  100% { transform: translate(-50%,-50%) translate(var(--sx), var(--sy)) scale(.2); opacity:0; } }
+.ft-sub { display:inline-block; margin-top:.4rem; padding:.3rem 1.2rem; border-radius:14px; transform: skewX(-7deg) rotate(-2deg);
+  background: linear-gradient(180deg, #3b82f6, #1e40af); border:3px solid #fff; box-shadow: 0 5px 0 #172554, 0 10px 24px rgba(0,0,0,.4);
+  font-family: Fredoka, sans-serif; font-weight:700; color:#fff; font-size: clamp(.95rem, 3.2vw, 1.35rem);
+  text-shadow: 0 2px 0 #1e3a8a; animation: ft-pop .7s cubic-bezier(.2,1.6,.4,1) .55s both; }
+`;
+
+function FancyTitle({ text, sub }) {
+  const sparks = useMemo(
+    () =>
+      Array.from({ length: 16 }, (_, i) => {
+        const a = (i / 16) * Math.PI * 2 + (i % 3) * 0.2;
+        const d = 140 + (i % 4) * 45;
+        return { sx: `${Math.cos(a) * d}px`, sy: `${Math.sin(a) * d * 0.6}px`, delay: `${(i * 0.17) % 2.6}s` };
+      }),
+    []
+  );
+  return (
+    <div className="relative z-0 mb-6 select-none w-screen max-w-3xl flex flex-col items-center">
+      <style>{TITLE_CSS}</style>
+      <h1 className="ft-wrap" aria-label={text}>
+        <span className="ft-burst" aria-hidden="true">
+          <span className="ft-rays" />
+          <span className="ft-core" />
+          {sparks.map((s, i) => (
+            <span key={i} className="ft-spark" style={{ "--sx": s.sx, "--sy": s.sy, animationDelay: s.delay }} />
+          ))}
+        </span>
+        {[...text].map((ch, i) =>
+          ch === " " ? (
+            <span key={i} className="ft-space" />
+          ) : (
+            <span key={i} className="ft-letter" aria-hidden="true" style={{ animationDelay: `${i * 0.07}s, ${0.8 + i * 0.12}s` }}>
+              {ch}
+            </span>
+          )
+        )}
+      </h1>
+      {sub && (
+        <div>
+          <span className="ft-sub">{sub}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function MenuButton({ icon: Icon, label, onClick, primary }) {
   return (
     <button
@@ -168,7 +245,7 @@ export default function StartScreen({ t, onStartMars, onStartMoon, onOpenSetting
 
   return (
     <div className="fixed inset-0 z-30 overflow-hidden bg-[#020617] select-none">
-      <EarthBackdrop />
+      <MenuBackdrops checks={t.menu.suitChecks} />
 
       {/* ===== Foreground UI ===== */}
       <div className="relative z-10 h-full flex flex-col p-4 sm:p-8">
@@ -195,10 +272,7 @@ export default function StartScreen({ t, onStartMars, onStartMoon, onOpenSetting
 
         {view === "main" ? (
           <div key="main" className="my-auto flex flex-col items-center text-center w-full max-w-md mx-auto menu-fade-in">
-            <h1 className="font-display text-4xl sm:text-6xl font-bold tracking-tight text-white drop-shadow-[0_4px_20px_rgba(0,0,0,0.65)] mb-2">
-              {t.gameTitle}
-            </h1>
-            <p className="text-sm sm:text-base font-semibold text-sky-100/80 drop-shadow mb-8">{t.menu.subtitle}</p>
+            <FancyTitle text={t.gameTitle} sub={t.menu.subtitle} />
 
             <div className="flex flex-col gap-3 w-full">
               <MenuButton icon={Play} label={t.menu.startGame} onClick={() => go("missions")} primary />

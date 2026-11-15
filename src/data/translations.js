@@ -11,6 +11,7 @@ const BASE = {
     menu: {
       subtitle: "Mission Control • Earth Orbit",
       baseLabel: "Earth Mission Control",
+      suitChecks: ["Helmet on", "Oxygen full", "Gloves sealed", "Ready for launch!"],
       startGame: "Start Game",
       credits: "Credits",
       back: "Back",
@@ -149,6 +150,7 @@ const BASE = {
     menu: {
       subtitle: "Kawalan Misi • Orbit Bumi",
       baseLabel: "Kawalan Misi Bumi",
+      suitChecks: ["Topi keledar dipakai", "Oksigen penuh", "Sarung tangan dikunci", "Sedia untuk dilancarkan!"],
       startGame: "Mula Permainan",
       credits: "Kredit",
       back: "Kembali",

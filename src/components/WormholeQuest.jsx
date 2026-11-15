@@ -112,7 +112,7 @@ function createSim() {
 // ---------------------------------------------------------------------
 // 3D bits
 // ---------------------------------------------------------------------
-function ShipRoverModel({ groupRef, wheelRefs, headRef }) {
+export function ShipRoverModel({ groupRef, wheelRefs, headRef }) {
   const wheels = [
     [-0.58, 0.2, 0.52],
     [0.58, 0.2, 0.52],
@@ -386,7 +386,7 @@ function Alien({ position, color, delay, show }) {
   );
 }
 
-function Portal({ position, rotation, show, color = "#a855f7" }) {
+export function Portal({ position, rotation, show, color = "#a855f7" }) {
   const ref = useRef();
   const ringRef = useRef();
   useFrame(({ clock }, dt) => {
@@ -881,7 +881,7 @@ function CameraDirector({ simRef, shot }) {
 // ---------------------------------------------------------------------
 // 2D overlays
 // ---------------------------------------------------------------------
-const QUEST_CSS = `
+export const QUEST_CSS = `
 @keyframes wq-spin { to { transform: rotate(360deg); } }
 @keyframes wq-grow { from { transform: scale(.05); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 @keyframes wq-suck { 0% { transform: translate(-50%,-50%) translate(-34vw, 26vh) rotate(0deg) scale(1.1); }
@@ -894,7 +894,7 @@ const QUEST_CSS = `
 @keyframes wq-fadeout { from { opacity: 1; } to { opacity: 0; } }
 `;
 
-function RoverIcon({ size = 120 }) {
+export function RoverIcon({ size = 120 }) {
   return (
     <svg width={size} height={size * 0.8} viewBox="0 0 120 96" aria-hidden="true">
       <rect x="22" y="38" width="76" height="26" rx="6" fill="#f8fafc" />
@@ -911,7 +911,7 @@ function RoverIcon({ size = 120 }) {
   );
 }
 
-function SuckCutscene({ t }) {
+export function SuckCutscene({ t }) {
   return (
     <div className="fixed inset-0 z-[36] overflow-hidden" style={{ animation: "wq-shake .25s linear infinite" }}>
       <div className="absolute inset-0 bg-slate-950/40" />
@@ -936,7 +936,7 @@ function SuckCutscene({ t }) {
   );
 }
 
-function LoadingScreen({ t }) {
+export function LoadingScreen({ t }) {
   const [tip, setTip] = useState(0);
   useEffect(() => {
     const id = setInterval(() => setTip((n) => (n + 1) % t.loadingTips.length), 900);
@@ -965,7 +965,7 @@ function LoadingScreen({ t }) {
   );
 }
 
-function Pad({ label, children, onDown, onUp, className = "" }) {
+export function Pad({ label, children, onDown, onUp, className = "" }) {
   return (
     <button
       type="button"

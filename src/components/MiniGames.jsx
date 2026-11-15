@@ -1470,7 +1470,10 @@ export function SwipeGame({ cfg, p, feel, onFinish }) {
 // =====================================================================
 const SCREEN = { x: 110, y: 80, w: 580, h: 180 };
 
-function TapScene({ samples, active, flash }) {
+function TapScene({ samples, active, flash, lead }) {
+  // lead: seconds until the next spike (null if none soon) -> a filling "get ready" bar + target zone
+  const warn = lead != null && lead < 1.6;
+  const zoneX = SCREEN.x + SCREEN.w * 0.8;
   const pts = samples
     .map((v, i) => `${SCREEN.x + (i / (samples.length - 1)) * SCREEN.w},${SCREEN.y + SCREEN.h / 2 - v * (SCREEN.h * 0.42)}`)
     .join(" ");
@@ -1481,10 +1484,25 @@ function TapScene({ samples, active, flash }) {
       {[0.25, 0.5, 0.75].map((f) => (
         <line key={f} x1={SCREEN.x} y1={SCREEN.y + SCREEN.h * f} x2={SCREEN.x + SCREEN.w} y2={SCREEN.y + SCREEN.h * f} stroke="#1e3a5f" strokeWidth="1" />
       ))}
+      {/* "spike zone" at the newest end of the graph: amber while a spike is coming, red when it's time to tap */}
+      {(warn || active) && (
+        <g>
+          <rect x={zoneX} y={SCREEN.y} width={SCREEN.x + SCREEN.w - zoneX} height={SCREEN.h} fill={active ? "#ef4444" : "#f59e0b"} opacity={active ? 0.35 : 0.18} style={active ? loop("as-twinkle", 0.35) : undefined} />
+          <rect x={zoneX} y={SCREEN.y} width={SCREEN.x + SCREEN.w - zoneX} height={SCREEN.h} fill="none" stroke={active ? "#fecaca" : "#fcd34d"} strokeWidth="4" strokeDasharray="10 6" />
+        </g>
+      )}
+      <line x1={SCREEN.x + SCREEN.w - 2} y1={SCREEN.y} x2={SCREEN.x + SCREEN.w - 2} y2={SCREEN.y + SCREEN.h} stroke="#e2e8f0" strokeWidth="2" opacity=".5" />
       <polyline points={pts} fill="none" stroke={active ? "#f87171" : "#4ade80"} strokeWidth="3.5" strokeLinejoin="round" />
       <text x={SCREEN.x + 6} y={SCREEN.y - 12} fontSize="15" fontWeight="900" fill="#e2e8f0">
         📡 NASA DONKI
       </text>
+      {/* get-ready bar filling up until the spike hits */}
+      {warn && !active && (
+        <g>
+          <rect x={SCREEN.x + 160} y={SCREEN.y - 26} width="260" height="16" rx="8" fill="#0f172a" stroke="#fcd34d" strokeWidth="2" />
+          <rect x={SCREEN.x + 162} y={SCREEN.y - 24} width={Math.max(0, 256 * (1 - lead / 1.6))} height="12" rx="6" fill="#fbbf24" />
+        </g>
+      )}
       {active && (
         <text x={SCREEN.x + SCREEN.w - 6} y={SCREEN.y - 12} textAnchor="end" fontSize="15" fontWeight="900" fill="#f87171" style={loop("as-twinkle", 0.3)}>
           ⚠ CME!
@@ -1563,11 +1581,29 @@ export function TapTimingGame({ cfg, p, feel, onFinish }) {
 
   const s = g.current;
   const active = s.spikes.some((sp) => !sp.hit && s.t >= sp.at && s.t < sp.at + 1);
+  const nextSpike = s.spikes.find((sp) => !sp.hit && !sp.missed && sp.at > s.t);
+  const lead = nextSpike && !s.done ? nextSpike.at - s.t : null;
+  const warn = lead != null && lead < 1.6 && !active;
   return (
     <div className="relative">
       <Stage env={cfg.env}>
-        <TapScene samples={s.samples} active={active} flash={s.flash} />
+        <TapScene samples={s.samples} active={active} flash={s.flash} lead={lead} />
       </Stage>
+      {/* Big hints so kids know exactly when to tap */}
+      {warn && (
+        <div className="absolute inset-x-0 top-[22%] flex justify-center pointer-events-none">
+          <span className="px-4 py-1.5 rounded-full bg-amber-400 text-slate-950 font-display font-bold text-base sm:text-xl shadow-lg">
+            ⏳ {p.spikeComing || "Spike coming… get ready!"} {Math.ceil(lead)}
+          </span>
+        </div>
+      )}
+      {active && !s.done && (
+        <div className="absolute inset-x-0 top-[18%] flex justify-center pointer-events-none">
+          <span className="rover-pop-in px-6 py-2 rounded-2xl bg-rose-500 text-white font-display font-bold text-2xl sm:text-4xl shadow-[0_0_30px_rgba(244,63,94,.8)] border-4 border-white animate-pulse">
+            👉 {p.tapNowBig || "TAP NOW!"} 👈
+          </span>
+        </div>
+      )}
       <div className="absolute top-2 inset-x-2 flex items-start justify-between gap-2 pointer-events-none">
         <div className="px-2.5 py-1 rounded-full bg-slate-900/75 border border-white/20 text-xs font-extrabold text-white">
           ⚡ {p.spikes}: {s.hits}/{cfg.spikes}
@@ -1577,10 +1613,17 @@ export function TapTimingGame({ cfg, p, feel, onFinish }) {
       </div>
       <Banner text={s.done ? p.done : s.msgT > 0 ? s.msg : null} tone={s.done || s.msg === p.hit ? "emerald" : "amber"} />
       <div className="absolute bottom-3 right-3">
+        {/* ring that shrinks onto the button as the spike arrives, then pulses while it's tap time */}
+        {(warn || active) && (
+          <span
+            className={`absolute rounded-full border-4 pointer-events-none ${active ? "border-white animate-ping" : "border-amber-300"}`}
+            style={{ inset: active ? 0 : `${-Math.max(0, lead) * 22}px` }}
+          />
+        )}
         <PadButton
           label={p.tapNow}
           onDown={tap}
-          className={`w-24 h-24 sm:w-28 sm:h-28 rounded-full text-2xl ${active ? "bg-rose-500 border-white text-white animate-pulse" : "bg-slate-700 border-slate-400 text-slate-200"}`}
+          className={`w-24 h-24 sm:w-28 sm:h-28 rounded-full text-2xl ${active ? "bg-rose-500 border-white text-white animate-pulse scale-110" : warn ? "bg-amber-500 border-amber-200 text-slate-950" : "bg-slate-700 border-slate-400 text-slate-200"}`}
         >
           {p.tapNow}
         </PadButton>

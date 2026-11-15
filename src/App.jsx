@@ -1,6 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import MarsScene, { createRoverState, SECRET_POS } from "./components/MarsScene";
+import MarsScene, { createRoverState, SECRET_POS, SPACE_PIECES, ROVER_BOUNDARY } from "./components/MarsScene";
+import MegaQuest, { MegaAssemble, MegaBadgeModal } from "./components/MegaQuest";
+import { MEGA_TEXT } from "./data/megaText";
+import CapAvatar from "./components/CapAvatar";
 import WormholeQuest, { SecretBadgeModal } from "./components/WormholeQuest";
+import TaskActionMenu from "./components/TaskActionMenu";
+import { FACT_TEXT } from "./data/factText";
 import StartScreen, { EarthBackdrop } from "./components/StartScreen";
 import LaunchSequence from "./components/LaunchSequence";
 import HUD from "./components/HUD";
@@ -44,7 +49,7 @@ const NO_DPAD = { up: false, down: false, left: false, right: false };
 music.attach(spaceAudio);
 
 // Which background tune plays in each phase (null = let the launch sounds shine)
-const PHASE_MUSIC = { start: "menu", launch: null, intro: "mars", playing: "mars", secret: "menu", lost: "mars", homeLaunch: null, victory: "victory", certificate: "victory" };
+const PHASE_MUSIC = { start: "menu", launch: null, intro: "mars", playing: "mars", secret: "menu", mega: "menu", lost: "mars", homeLaunch: null, victory: "victory", certificate: "victory" };
 
 const EARTH_PHASES = ["victory", "certificate"];
 
@@ -125,7 +130,17 @@ export default function App() {
   const [secretDone, setSecretDone] = useState(false);
   const [secretAward, setSecretAward] = useState(false);
   const [secretStage, setSecretStage] = useState(null);
-  const modalOpen = !!scenario || quizTask != null || homePrompt || eventIndex != null || flagModal || secretAward;
+  // Press E at a task: Do task / Fact / Quit
+  const [taskMenu, setTaskMenu] = useState(null);
+  // Moon-only MEGA quest: pieces of space -> wormhole -> boss fight
+  const [megaPieces, setMegaPieces] = useState([]);
+  const [megaPortal, setMegaPortal] = useState(null);
+  const [megaDone, setMegaDone] = useState(false);
+  const [megaAward, setMegaAward] = useState(false);
+  const [megaAssembling, setMegaAssembling] = useState(false);
+  const [megaStage, setMegaStage] = useState(null);
+  const [farahLine, setFarahLine] = useState(null); // Dr Farah pops up with a line
+  const modalOpen = !!scenario || quizTask != null || homePrompt || eventIndex != null || flagModal || secretAward || taskMenu != null || megaAssembling || megaAward;
 
   const [focusModule, setFocusModule] = useState("habitat");
   const [selectedModule, setSelectedModule] = useState(null);
@@ -246,6 +261,7 @@ export default function App() {
     driveTimeRef.current = 0;
     setPaused(false);
     setQuizTask(null);
+    setTaskMenu(null);
     setHomePrompt(false);
     setFlagPlanted(false);
     setFlagModal(false);
@@ -253,6 +269,13 @@ export default function App() {
     setSecretDone(false);
     setSecretAward(false);
     setSecretStage(null);
+    setMegaPieces([]);
+    setMegaPortal(null);
+    setMegaDone(false);
+    setMegaAward(false);
+    setMegaAssembling(false);
+    setMegaStage(null);
+    setFarahLine(null);
     roverState.current = createRoverState();
     setDepletedResource(null);
     setFocusModule("habitat");
@@ -298,9 +321,15 @@ export default function App() {
     if (flagPending) list.push({ key: "flag", kind: "flag", index: -1, x: FLAG_POS.x, z: FLAG_POS.z });
     else if (allDone) list.push({ key: "home", kind: "home", index: -1, x: HOME_POS.x, z: HOME_POS.z });
     // The secret is never shown on the map or task list, the rover just has to stumble on it
-    if (!secretDone) list.push({ key: "secret", kind: "secret", index: -1, x: SECRET_POS.x, z: SECRET_POS.z });
+    if (!secretDone && mission === "mars") list.push({ key: "secret", kind: "secret", index: -1, x: SECRET_POS.x, z: SECRET_POS.z });
+    if (mission === "moon" && !megaDone) {
+      SPACE_PIECES.forEach((p, i) => {
+        if (!megaPieces.includes(i)) list.push({ key: "piece-" + i, kind: "piece", index: i, x: p.x, z: p.z });
+      });
+      if (megaPortal) list.push({ key: "mega", kind: "mega", index: -1, x: megaPortal.x, z: megaPortal.z });
+    }
     return list;
-  }, [taskIndex, badges, allDone, flagPlanted, secretDone]);
+  }, [taskIndex, badges, allDone, flagPlanted, secretDone, mission, megaDone, megaPieces, megaPortal]);
   const flagPending = allDone && !!FLAG_POS && !flagPlanted;
   const guideTarget = flagPending
     ? { x: FLAG_POS.x, z: FLAG_POS.z }
@@ -330,8 +359,8 @@ export default function App() {
     if (!target || phase !== "playing" || inputLocked) return;
     setDpadInput(NO_DPAD);
     if (target.kind === "task" && target.index === taskIndex) {
-      setScenario({ taskIndex: target.index, revisit, key: Date.now() });
-      playSfx("alert");
+      setTaskMenu(target.index);
+      playSfx("pop");
     } else if (target.kind === "quiz") {
       setQuizTask(target.index);
       playSfx("click");
@@ -341,6 +370,20 @@ export default function App() {
     } else if (target.kind === "home") {
       setHomePrompt(true);
       playSfx("success");
+    } else if (target.kind === "piece") {
+      const mt = MEGA_TEXT[lang] || MEGA_TEXT.en;
+      if (megaPieces.includes(target.index)) return;
+      const next = [...megaPieces, target.index];
+      setMegaPieces(next);
+      playSfx("ding");
+      if (next.length === 1) setFarahLine({ text: mt.firstPiece, key: Date.now() });
+      else showToast(mt.pieceCount.replace("{n}", next.length));
+      if (next.length >= SPACE_PIECES.length) setTimeout(() => setMegaAssembling(true), 900);
+    } else if (target.kind === "mega") {
+      setNearCp(null);
+      setMegaStage("suck");
+      setPhase("mega");
+      playSfx("alert");
     } else if (target.kind === "secret") {
       setNearCp(null);
       setSecretStage("suck");
@@ -350,6 +393,39 @@ export default function App() {
   };
 
   const handleSecretStage = useCallback((s) => setSecretStage(s), []);
+  const handleMegaStage = useCallback((s) => setMegaStage(s), []);
+  // All 6 pieces glued together: a wormhole opens just in front of the rover
+  const handleMegaAssembled = useCallback(() => {
+    const s = roverState.current;
+    let x = s.pos.x + Math.sin(s.rotY) * 5;
+    let z = s.pos.z + Math.cos(s.rotY) * 5;
+    const d = Math.hypot(x, z);
+    const max = ROVER_BOUNDARY - 4;
+    if (d > max) {
+      x *= max / d;
+      z *= max / d;
+    }
+    setMegaPortal({ x, z });
+    setMegaAssembling(false);
+    setFarahLine({ text: (MEGA_TEXT[lang] || MEGA_TEXT.en).portalReady, key: Date.now() });
+    playSfx("badge");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lang, soundOn]);
+  const handleMegaComplete = () => {
+    roverState.current = createRoverState();
+    setMegaDone(true);
+    setMegaPortal(null);
+    setMegaStage(null);
+    setPhase("playing");
+    setMegaAward(true);
+    playSfx("victory");
+  };
+  // Dr Farah's pop-up line hides itself
+  useEffect(() => {
+    if (!farahLine) return undefined;
+    const id = setTimeout(() => setFarahLine(null), 6500);
+    return () => clearTimeout(id);
+  }, [farahLine]);
   const handleSecretComplete = () => {
     // The aliens' portal drops the rover back at the compound
     roverState.current = createRoverState();
@@ -532,10 +608,10 @@ export default function App() {
   // Auto-pause when the tab/app is hidden; P toggles pause
   useEffect(() => {
     const onHide = () => {
-      if (document.hidden && (phase === "playing" || phase === "secret")) setPaused(true);
+      if (document.hidden && (phase === "playing" || phase === "secret" || phase === "mega")) setPaused(true);
     };
     const onKey = (e) => {
-      if (e.code === "KeyP" && (phase === "playing" || phase === "secret")) setPaused((v) => !v);
+      if (e.code === "KeyP" && (phase === "playing" || phase === "secret" || phase === "mega")) setPaused((v) => !v);
     };
     document.addEventListener("visibilitychange", onHide);
     window.addEventListener("keydown", onKey);
@@ -600,7 +676,7 @@ export default function App() {
 
   // Esc leaves rover mode (not while a task is open)
   useEffect(() => {
-    if (!roverMode || modalOpen || phase === "secret") return undefined;
+    if (!roverMode || modalOpen || phase === "secret" || phase === "mega") return undefined;
     const onKey = (e) => {
       if (e.key === "Escape") setRover(false);
     };
@@ -622,7 +698,7 @@ export default function App() {
   return (
     <div className="relative w-screen h-screen overflow-hidden select-none">
       {/* 3D Jezero Crater (hidden once we're home on Earth) */}
-      {!onEarth && !(phase === "secret" && secretStage !== "suck") && (
+      {!onEarth && !(phase === "secret" && secretStage !== "suck") && !(phase === "mega" && megaStage !== "suck") && (
         <MarsScene
           key={mission}
           phase={phase}
@@ -642,7 +718,7 @@ export default function App() {
           roverSpeed={roverSpeedMultiplier(rover.level, rover.damaged)}
           roverSize={roverSizeMultiplier(rover.level)}
           roverDamaged={rover.damaged}
-          inputLocked={inputLocked || phase === "secret"}
+          inputLocked={inputLocked || phase === "secret" || phase === "mega"}
           onReachCheckpoint={handleReachCheckpoint}
           targets={targets}
           guideTarget={guideTarget}
@@ -654,7 +730,9 @@ export default function App() {
           flagLabel={t.flag?.checkpoint || ""}
           skyLabels={t.sky}
           onFirstHop={() => showToast(t.sky.lowGravityTip)}
-          secretActive={phase === "playing" && !secretDone}
+          secretActive={phase === "playing" && !secretDone && mission === "mars"}
+          spacePieces={phase === "playing" && mission === "moon" && !megaDone ? SPACE_PIECES.map((_, i) => i).filter((i) => !megaPieces.includes(i)) : []}
+          megaPortal={phase === "playing" && mission === "moon" && !megaDone ? megaPortal : null}
         />
       )}
       {onEarth && (
@@ -748,6 +826,7 @@ export default function App() {
             setShowLog(true);
           }}
           secretBadge={secretDone}
+          megaBadge={megaDone}
         />
       )}
 
@@ -767,6 +846,38 @@ export default function App() {
           }}
         />
       )}
+      {/* Moon MEGA quest */}
+      {phase === "playing" && megaAssembling && <MegaAssemble lang={lang} onDone={handleMegaAssembled} />}
+      {phase === "mega" && (
+        <MegaQuest
+          lang={lang}
+          soundOn={soundOn}
+          locked={paused || showSettings || showHelp || showLog || showNasa}
+          onSfx={playSfx}
+          onStageChange={handleMegaStage}
+          onComplete={handleMegaComplete}
+          onPause={() => {
+            playSfx("click");
+            setPaused(true);
+          }}
+        />
+      )}
+      {phase === "playing" && megaAward && (
+        <MegaBadgeModal
+          lang={lang}
+          onClose={() => {
+            playSfx("click");
+            setMegaAward(false);
+            setRover(true);
+          }}
+        />
+      )}
+      {phase === "playing" && farahLine && (
+        <div key={farahLine.key} className="rover-pop-in fixed left-3 sm:left-5 bottom-48 sm:bottom-52 z-30 pointer-events-none">
+          <CapAvatar mood="happy" message={farahLine.text} />
+        </div>
+      )}
+
       {phase === "playing" && secretAward && (
         <SecretBadgeModal
           lang={lang}
@@ -833,6 +944,25 @@ export default function App() {
           onSfx={playSfx}
           onChoose={handleChoose}
           onFinish={handleScenarioFinish}
+        />
+      )}
+
+      {phase === "playing" && taskMenu != null && (
+        <TaskActionMenu
+          t={t}
+          lang={lang}
+          taskIndex={taskMenu}
+          onSfx={playSfx}
+          onDoTask={() => {
+            setTaskMenu(null);
+            setScenario({ taskIndex: taskMenu, revisit, key: Date.now() });
+            playSfx("alert");
+          }}
+          onQuit={() => {
+            setTaskMenu(null);
+            playSfx("click");
+            showToast(`🚙 ${(FACT_TEXT[lang] || FACT_TEXT.en).ui.quitToast}`);
+          }}
         />
       )}
 
@@ -913,7 +1043,7 @@ export default function App() {
         <EventModal key={eventIndex} t={t} eventIndex={eventIndex} onChoose={handleEventChoose} onClose={handleEventClose} onSfx={playSfx} />
       )}
 
-      {paused && (phase === "playing" || phase === "secret") && (
+      {paused && (phase === "playing" || phase === "secret" || phase === "mega") && (
         <PauseOverlay
           t={t}
           onResume={() => {
