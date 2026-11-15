@@ -700,7 +700,8 @@ export default function App() {
   return (
     <div className="relative w-screen h-screen overflow-hidden select-none">
       {/* 3D Jezero Crater (hidden once we're home on Earth) */}
-      {!onEarth && !(phase === "secret" && secretStage !== "suck") && !(phase === "mega" && megaStage !== "suck") && (
+      {/* the 3D world stays unloaded during the studio intro, so it can never peek through */}
+      {!onEarth && phase !== "studio" && !(phase === "secret" && secretStage !== "suck") && !(phase === "mega" && megaStage !== "suck") && (
         <MarsScene
           key={mission}
           phase={phase}
@@ -747,7 +748,8 @@ export default function App() {
       {phase === "studio" && <StudioIntro onDone={handleStudioDone} onSfx={playSfx} />}
 
       {/* Main menu */}
-      {phase === "start" && (
+      {/* main menu is already drawn under the studio intro, so the intro fades straight into it */}
+      {(phase === "start" || phase === "studio") && (
         <StartScreen
           t={t}
           onStartMars={handleStartMars}
