@@ -2,7 +2,7 @@
 // image: "solar" | "hydroponic" use real photos; anything else shows the task's illustrated scene.
 export const FACT_IMAGES = {
   mars: [null, null, null, null, null],
-  moon: [null, "hydroponic", null, "solar", null],
+  moon: [null, null, null, "solar", null], // Water Recycler uses its own animated scene
 };
 
 export const FACT_TEXT = {

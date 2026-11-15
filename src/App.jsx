@@ -5,6 +5,7 @@ import { MEGA_TEXT } from "./data/megaText";
 import CapAvatar from "./components/CapAvatar";
 import WormholeQuest, { SecretBadgeModal } from "./components/WormholeQuest";
 import TaskActionMenu from "./components/TaskActionMenu";
+import StudioIntro from "./components/StudioIntro";
 import { FACT_TEXT } from "./data/factText";
 import StartScreen, { EarthBackdrop } from "./components/StartScreen";
 import LaunchSequence from "./components/LaunchSequence";
@@ -49,7 +50,7 @@ const NO_DPAD = { up: false, down: false, left: false, right: false };
 music.attach(spaceAudio);
 
 // Which background tune plays in each phase (null = let the launch sounds shine)
-const PHASE_MUSIC = { start: "menu", launch: null, intro: "mars", playing: "mars", secret: "menu", mega: "menu", lost: "mars", homeLaunch: null, victory: "victory", certificate: "victory" };
+const PHASE_MUSIC = { studio: null, start: "menu", launch: null, intro: "mars", playing: "mars", secret: "menu", mega: "menu", lost: "mars", homeLaunch: null, victory: "victory", certificate: "victory" };
 
 const EARTH_PHASES = ["victory", "certificate"];
 
@@ -99,7 +100,7 @@ export default function App() {
   const [totalStars, setTotalStars] = useState(0);
   const [cadetName, setCadetName] = useState("");
   // start | launch | intro | playing | lost | homeLaunch | victory (leaderboard) | certificate
-  const [phase, setPhase] = useState("start");
+  const [phase, setPhase] = useState("studio"); // studio splash plays first, then the main menu
   const [stats, setStats] = useState({ ...INITIAL_STATS });
   const [depletedResource, setDepletedResource] = useState(null);
 
@@ -393,6 +394,7 @@ export default function App() {
   };
 
   const handleSecretStage = useCallback((s) => setSecretStage(s), []);
+  const handleStudioDone = useCallback(() => setPhase((p) => (p === "studio" ? "start" : p)), []);
   const handleMegaStage = useCallback((s) => setMegaStage(s), []);
   // All 6 pieces glued together: a wormhole opens just in front of the rover
   const handleMegaAssembled = useCallback(() => {
@@ -740,6 +742,9 @@ export default function App() {
           <EarthBackdrop />
         </div>
       )}
+
+      {/* Game studio splash (Interstellar V) before the main menu */}
+      {phase === "studio" && <StudioIntro onDone={handleStudioDone} onSfx={playSfx} />}
 
       {/* Main menu */}
       {phase === "start" && (
