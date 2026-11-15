@@ -58,6 +58,11 @@ export const SECRET_TEXT = {
     badgeName: "?",
     badgeText: "You found a secret that most explorers never see. Shh… don't tell anyone!",
     badgeBtn: "Back to the compound",
+    logTag: "Secret discovery",
+    logTitle: "? Badge: The Alien Ship",
+    logText: "Fell through a wormhole, found 3 lost treasures and helped the aliens!",
+    lbRow: "Secret badge ?",
+    certLine: "Found a secret wormhole to an alien ship!",
   },
   ms: {
     mystery: "???",
@@ -117,6 +122,11 @@ export const SECRET_TEXT = {
     badgeName: "?",
     badgeText: "Awak jumpa rahsia yang jarang dilihat oleh peneroka lain. Syy… jangan beritahu sesiapa!",
     badgeBtn: "Kembali ke kompaun",
+    logTag: "Penemuan rahsia",
+    logTitle: "Lencana ?: Kapal Makhluk Asing",
+    logText: "Jatuh melalui lubang cacing, menjumpai 3 harta yang hilang dan membantu makhluk asing!",
+    lbRow: "Lencana rahsia ?",
+    certLine: "Menjumpai lubang cacing rahsia ke kapal makhluk asing!",
   },
 };
 

@@ -5,6 +5,7 @@ import * as THREE from "three";
 import { TASKS, CHECKPOINT_RADIUS, HOME_POS, FLAG_POS, PAD_POS, WORLD, GRAVITY } from "../data/tasks";
 import { drawJalurGemilang, JalurGemilang } from "./FlagPlant";
 import { spaceAudio } from "../utils/sound";
+import { GfxContext, DecoLight, canvasQuality } from "../utils/gfx";
 
 // Ground height for the active world (Mars: Jezero Crater, Moon: Shackleton Crater)
 export function getTerrainHeight(x, z) {
@@ -921,7 +922,7 @@ function SecretAnomaly({ pos = SECRET_POS, color = "#a855f7", glow = "#c084fc", 
           </mesh>
         ))}
       </group>
-      <pointLight position={[0, 2.3, 0]} color={color} intensity={10} distance={12} />
+      <DecoLight position={[0, 2.3, 0]} color={color} intensity={10} distance={12} />
       <Html position={[0, 4.4, 0]} center distanceFactor={14} zIndexRange={[10, 0]}>
         <div className="pointer-events-none px-3 py-1 rounded-full bg-violet-950/85 border-2 border-violet-400 text-violet-200 font-display font-bold text-lg animate-pulse">???</div>
       </Html>
@@ -1953,6 +1954,7 @@ export default function MarsScene({
   secretActive = false,
   spacePieces = [],
   megaPortal = null,
+  lowGfx = false,
 }) {
   const moon = WORLD === "moon";
   const isNight = env === "night" || env === "moonNight" || env === "moonDark";
@@ -1963,10 +1965,12 @@ export default function MarsScene({
   return (
     <div className="fixed inset-0 z-0">
       <Canvas
-        shadows
+        key={lowGfx ? "low" : "high"}
+        {...canvasQuality(lowGfx)}
         camera={{ position: [11, 6.4, 12.5], fov: 55 }}
         onPointerMissed={() => onSelectModule(null)}
       >
+        <GfxContext.Provider value={lowGfx}>
         <color attach="background" args={["#c86d51"]} />
         <fogExp2 attach="fog" args={["#c86d51", 0.014]} />
 
@@ -1988,7 +1992,7 @@ export default function MarsScene({
           shadow-camera-bottom={-30}
         />
 
-        {(isNight || moon) && <Stars radius={70} depth={30} count={moon ? 1600 : 900} factor={moon ? 3 : 2.6} fade />}
+        {(isNight || moon) && <Stars radius={70} depth={30} count={(moon ? 1600 : 900) / (lowGfx ? 3 : 1)} factor={moon ? 3 : 2.6} fade />}
 
         <MartianTerrain world={WORLD} />
         {!moon && <FloatingDustMotes isNight={isNight} />}
@@ -2067,6 +2071,7 @@ export default function MarsScene({
           roverMode={roverMode}
           roverState={roverState}
         />
+        </GfxContext.Provider>
       </Canvas>
     </div>
   );

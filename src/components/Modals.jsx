@@ -2,7 +2,7 @@ import React from "react";
 import { X, Volume2, VolumeX, Globe, Sparkles, RotateCcw, Music } from "lucide-react";
 import CapAvatar from "./CapAvatar";
 
-export function SettingsModal({ t, lang, onChangeLang, soundOn, onToggleSound, musicOn, onToggleMusic, autoRead, onToggleAutoRead, bigText, onToggleBigText, onClose }) {
+export function SettingsModal({ t, lang, onChangeLang, soundOn, onToggleSound, musicOn, onToggleMusic, autoRead, onToggleAutoRead, bigText, onToggleBigText, lowGfx, onToggleLowGfx, onClose }) {
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm">
       <div className="w-full max-w-md bg-slate-900 border border-white/15 rounded-3xl p-6 shadow-2xl">
@@ -93,6 +93,7 @@ export function SettingsModal({ t, lang, onChangeLang, soundOn, onToggleSound, m
           {[
             { icon: "🗣️", label: t.autoReadLabel, on: autoRead, toggle: onToggleAutoRead },
             { icon: "🔠", label: t.bigTextLabel, on: bigText, toggle: onToggleBigText },
+            ...(onToggleLowGfx ? [{ icon: "🖥️", label: t.lowGfxLabel, on: lowGfx, toggle: onToggleLowGfx }] : []),
           ].map((row) => (
             <div key={row.label} className="mt-2.5 flex items-center justify-between p-3.5 rounded-2xl bg-slate-800/80 border border-white/10">
               <div className="flex items-center gap-2.5 text-sm font-bold text-slate-200">

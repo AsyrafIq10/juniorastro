@@ -1,15 +1,20 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { missionPoints, RIVALS } from "../data/leaderboard";
 import CapAvatar from "./CapAvatar";
+import { SECRET_TEXT } from "../data/secretText";
+import { MEGA_TEXT } from "../data/megaText";
 
 const ROW = 54; // px per leaderboard row
 const MEDALS = ["🥇", "🥈", "🥉"];
 
 // After splashdown: tally the mission points (with ticking sounds), then the
 // player's row climbs the leaderboard of other cadets to its final rank.
-export default function Leaderboard({ t, stats, badges, stars, roverLevel, name, onNameChange, onContinue, onSfx }) {
+export default function Leaderboard({ t, lang = "en", stats, badges, stars, roverLevel, secret = false, mega = false, name, onNameChange, onContinue, onSfx }) {
   const lb = t.lb;
-  const { rows, total } = useMemo(() => missionPoints({ stats, badges, stars, roverLevel }), [stats, badges, stars, roverLevel]);
+  const { rows, total } = useMemo(() => missionPoints({ stats, badges, stars, roverLevel, secret, mega }), [stats, badges, stars, roverLevel, secret, mega]);
+  // Row names for the hidden-quest bonuses come from the quest text
+  const rowLabel = (key) =>
+    key === "secret" ? (SECRET_TEXT[lang] || SECRET_TEXT.en).lbRow : key === "mega" ? (MEGA_TEXT[lang] || MEGA_TEXT.en).lbRow : lb.rows[key];
   const [stage, setStage] = useState("tally"); // tally | board
   const [counts, setCounts] = useState(rows.map(() => 0));
   const [current, setCurrent] = useState(0);
@@ -97,7 +102,7 @@ export default function Leaderboard({ t, stats, badges, stars, roverLevel, name,
                   }`}
                 >
                   <span className="text-sm font-bold text-slate-100">
-                    {r.icon} {lb.rows[r.key]}
+                    {r.icon} {rowLabel(r.key)}
                   </span>
                   <span className="font-display text-lg font-bold text-white tabular-nums">
                     {counts[i]} <span className="text-xs text-slate-400">{lb.pts}</span>

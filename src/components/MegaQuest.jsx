@@ -8,6 +8,7 @@ import { ShipRoverModel, Portal, QUEST_CSS, SuckCutscene, LoadingScreen, Pad } f
 import { MEGA_TEXT } from "../data/megaText";
 import { pauseState } from "../utils/pause";
 import { spaceAudio } from "../utils/sound";
+import { GfxContext, DecoLight, canvasQuality } from "../utils/gfx";
 
 // =====================================================================
 // MEGA hidden quest (Moon only): boss fight against Gearlord Z.
@@ -171,7 +172,7 @@ function GearlordModel({ fightRef, stage }) {
           </div>
         </Html>
       </group>
-      <pointLight position={[0, 4, 2.5]} color="#ef4444" intensity={8} distance={10} />
+      <DecoLight position={[0, 4, 2.5]} color="#ef4444" intensity={8} distance={10} />
     </group>
   );
 }
@@ -237,7 +238,7 @@ export function Trophy({ show, from, to }) {
         <boxGeometry args={[0.6, 0.2, 0.6]} />
         <meshStandardMaterial color="#78350f" roughness={0.6} />
       </mesh>
-      <pointLight color="#fde047" intensity={6} distance={5} />
+      <DecoLight color="#fde047" intensity={6} distance={5} />
     </group>
   );
 }
@@ -847,7 +848,7 @@ export function MegaBadgeModal({ lang, onClose }) {
 // ---------------------------------------------------------------------
 // The quest
 // ---------------------------------------------------------------------
-export default function MegaQuest({ lang, soundOn, locked: externalLock, onSfx, onStageChange, onComplete, onPause }) {
+export default function MegaQuest({ lang, soundOn, locked: externalLock, onSfx, onStageChange, onComplete, onPause, lowGfx = false }) {
   const t = MEGA_TEXT[lang] || MEGA_TEXT.en;
   // suck | loading | drop | talk | fight | lost | defeated | trophy | portalTalk | portal | flash
   const [stage, setStage] = useState("suck");
@@ -922,13 +923,14 @@ export default function MegaQuest({ lang, soundOn, locked: externalLock, onSfx, 
       <style>{QUEST_CSS}</style>
       {stage !== "suck" && (
         <div className="absolute inset-0 bg-[#12040a]">
-          <Canvas shadows camera={{ position: [6, 4.5, 13], fov: 52 }}>
+          <Canvas key={lowGfx ? "low" : "high"} {...canvasQuality(lowGfx)} camera={{ position: [6, 4.5, 13], fov: 52 }}>
+            <GfxContext.Provider value={lowGfx}>
             <color attach="background" args={["#12040a"]} />
             <fog attach="fog" args={["#2a0610", 22, 60]} />
-            <ambientLight intensity={0.45} color="#fecaca" />
+            <ambientLight intensity={lowGfx ? 0.6 : 0.45} color="#fecaca" />
             <hemisphereLight args={["#f87171", "#1c1917", 0.45]} />
             <directionalLight position={[8, 18, 10]} intensity={1.0} color="#fff1f2" castShadow shadow-mapSize={[1024, 1024]} />
-            <Stars radius={80} depth={40} count={1500} factor={3} fade />
+            <Stars radius={80} depth={40} count={lowGfx ? 500 : 1500} factor={3} fade />
             <ArenaWorld />
             <GearlordModel fightRef={fightRef} stage={stage} />
             <DangerZones fightRef={fightRef} />
@@ -956,6 +958,7 @@ export default function MegaQuest({ lang, soundOn, locked: externalLock, onSfx, 
               }}
             />
             <CameraRig shot={shot} />
+            </GfxContext.Provider>
           </Canvas>
         </div>
       )}

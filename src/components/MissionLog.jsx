@@ -2,9 +2,11 @@ import React from "react";
 import ProblemScene from "./ProblemScene";
 import { TASKS } from "../data/tasks";
 import { JalurGemilang } from "./FlagPlant";
+import { SECRET_TEXT } from "../data/secretText";
+import { MEGA_TEXT } from "../data/megaText";
 
 // 📔 Scrapbook of sticker cards: one per task attempt (picture, choice, stars, result, badge)
-export default function MissionLog({ t, log, badges, onClose }) {
+export default function MissionLog({ t, lang = "en", log, badges, onClose }) {
   const b = t.blast;
   return (
     <div className="fixed inset-0 z-[45] flex items-end sm:items-center justify-center p-2 sm:p-4 bg-slate-950/75 backdrop-blur-sm">
@@ -29,6 +31,42 @@ export default function MissionLog({ t, log, badges, onClose }) {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 pb-2">
             {log.map((entry, i) => {
+              // Secret "?" badge and MEGA badge stickers (only appear once they're earned)
+              if (entry.type === "secret" || entry.type === "mega") {
+                const mega = entry.type === "mega";
+                const st = (mega ? MEGA_TEXT : SECRET_TEXT)[lang] || (mega ? MEGA_TEXT : SECRET_TEXT).en;
+                return (
+                  <div
+                    key={i}
+                    className={`relative rover-pop-in bg-white rounded-2xl p-2.5 pb-3 shadow-[0_6px_18px_rgba(0,0,0,0.18)] border-2 ${mega ? "border-amber-400" : "border-violet-400"} -rotate-1`}
+                    style={{ animationDelay: `${i * 0.06}s` }}
+                  >
+                    <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 w-16 h-5 bg-amber-200/80 rotate-2 rounded-sm" />
+                    <div
+                      className="rounded-xl overflow-hidden flex items-center justify-center py-6 relative"
+                      style={{ background: mega ? "radial-gradient(circle, #7f1d1d, #1c1917 70%)" : "radial-gradient(circle, #4c1d95, #0f172a 70%)" }}
+                    >
+                      <div className={`w-24 h-24 rounded-full p-1 shadow-xl ${mega ? "bg-gradient-to-br from-amber-300 via-red-500 to-fuchsia-600" : "bg-gradient-to-br from-violet-500 via-fuchsia-500 to-cyan-400"}`}>
+                        <div className="w-full h-full rounded-full bg-slate-950 flex flex-col items-center justify-center">
+                          {mega ? (
+                            <>
+                              <span className="text-3xl">🏆</span>
+                              <span className="font-display text-sm font-bold text-amber-200">MEGA</span>
+                            </>
+                          ) : (
+                            <span className="font-display text-5xl font-bold text-white">?</span>
+                          )}
+                        </div>
+                      </div>
+                      <span className="absolute top-2 right-3 text-2xl">{mega ? "🤖" : "👽"}</span>
+                      <span className="absolute bottom-2 left-3 text-xl">🌀</span>
+                    </div>
+                    <div className={`mt-2 text-[11px] font-extrabold uppercase tracking-wider ${mega ? "text-amber-600" : "text-violet-600"}`}>✨ {st.logTag}</div>
+                    <div className="font-display text-base font-bold text-slate-800">{st.logTitle}</div>
+                    <p className="mt-1 text-sm font-semibold text-slate-600">{st.logText}</p>
+                  </div>
+                );
+              }
               if (entry.type === "flag") {
                 return (
                   <div key={i} className="relative rover-pop-in bg-white rounded-2xl p-2.5 pb-3 shadow-[0_6px_18px_rgba(0,0,0,0.18)] border-2 border-red-300 rotate-1" style={{ animationDelay: `${i * 0.06}s` }}>

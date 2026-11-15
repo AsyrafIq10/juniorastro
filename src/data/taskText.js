@@ -5,6 +5,7 @@ export const TASK_TEXT = {
   en: {
     musicLabel: "Background Music",
     autoReadLabel: "Dr Farah reads aloud",
+    lowGfxLabel: "Low graphics (faster on slow laptops)",
     bigTextLabel: "Bigger text",
     help: {
       title: "How to Play",
@@ -107,7 +108,7 @@ export const TASK_TEXT = {
     },
     lb: {
       title: "Mission Leaderboard",
-      subtitle: "Cadets of the Jezero 6 Space Academy",
+      subtitle: "Cadets of the Interstellar V Space Academy",
       rows: {
         science: "Science found",
         crew: "Crew & base kept safe",
@@ -478,6 +479,7 @@ export const TASK_TEXT = {
   ms: {
     musicLabel: "Muzik Latar",
     autoReadLabel: "Dr Farah membaca dengan kuat",
+    lowGfxLabel: "Grafik rendah (lebih laju untuk komputer perlahan)",
     bigTextLabel: "Teks lebih besar",
     help: {
       title: "Cara Bermain",
@@ -580,7 +582,7 @@ export const TASK_TEXT = {
     },
     lb: {
       title: "Papan Pendahulu Misi",
-      subtitle: "Kadet Akademi Angkasa Jezero 6",
+      subtitle: "Kadet Akademi Angkasa Interstellar V",
       rows: {
         science: "Sains dijumpai",
         crew: "Kru & pangkalan selamat",

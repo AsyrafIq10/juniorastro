@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Award, Download, Printer, RotateCcw, Sparkles } from "lucide-react";
 import { STAT_KEYS, STAT_META, SURVIVAL_KEYS, TASKS } from "../data/tasks";
 import { JalurGemilang } from "./FlagPlant";
+import { SECRET_TEXT } from "../data/secretText";
+import { MEGA_TEXT } from "../data/megaText";
 
 const fmt = (k, v) => (k === "science" ? `${v}` : `${v}%`);
 
@@ -19,7 +21,9 @@ function getHighestBadgeKey(stats) {
   return bestKey;
 }
 
-export function CertificateModal({ t, stats, roverLevel = 0, badges = [], initialName = "", flagPlanted = false, onPlayAgain, onOpenNasa, onOpenLog }) {
+export function CertificateModal({ t, lang = "en", stats, roverLevel = 0, badges = [], initialName = "", flagPlanted = false, secret = false, mega = false, onPlayAgain, onOpenNasa, onOpenLog }) {
+  const secretText = SECRET_TEXT[lang] || SECRET_TEXT.en;
+  const megaText = MEGA_TEXT[lang] || MEGA_TEXT.en;
   const [cadetName, setCadetName] = useState(initialName);
   const badgeKey = getHighestBadgeKey(stats);
   const badgeTitle = t.certificate.badges[badgeKey];
@@ -85,12 +89,18 @@ export function CertificateModal({ t, stats, roverLevel = 0, badges = [], initia
     ctx.font = "bold 24px sans-serif";
     ctx.fillText(statItems.join("   •   "), 600, 590);
 
+    // Hidden-quest badges (only if earned)
+    const extras = [secret && `❔ ${secretText.certLine}`, mega && `🏆 ${megaText.certLine}`].filter(Boolean);
+    ctx.fillStyle = "#e9d5ff";
+    ctx.font = "bold 22px sans-serif";
+    extras.forEach((line, i) => ctx.fillText(line, 600, 630 + i * 30));
+
     ctx.fillStyle = "#64748b";
     ctx.font = "18px sans-serif";
     ctx.fillText("NASA Perseverance (MOXIE & MEDA) • NASA DONKI • NASA OSDR", 600, 690);
 
     const link = document.createElement("a");
-    link.download = `jezero6-certificate-${displayName.toLowerCase().replace(/\s+/g, "-")}.png`;
+    link.download = `interstellarv-certificate-${displayName.toLowerCase().replace(/\s+/g, "-")}.png`;
     link.href = canvas.toDataURL("image/png");
     link.click();
   };
@@ -163,6 +173,26 @@ export function CertificateModal({ t, stats, roverLevel = 0, badges = [], initia
             <div className="mt-3 flex items-center justify-center gap-3 px-4 py-2.5 rounded-2xl bg-red-500/10 border border-red-400/40">
               <JalurGemilang width={56} className="rounded shadow" />
               <span className="text-sm font-extrabold text-red-200">{t.flag.certLine}</span>
+            </div>
+          )}
+          {(secret || mega) && (
+            <div className="mt-3 grid gap-2">
+              {secret && (
+                <div className="flex items-center justify-center gap-3 px-4 py-2.5 rounded-2xl bg-violet-500/10 border border-violet-400/50">
+                  <span className="w-11 h-11 shrink-0 rounded-full bg-gradient-to-br from-violet-500 via-fuchsia-500 to-cyan-400 p-0.5">
+                    <span className="w-full h-full rounded-full bg-slate-950 flex items-center justify-center font-display text-xl font-bold text-white">?</span>
+                  </span>
+                  <span className="text-sm font-extrabold text-violet-200">{secretText.certLine}</span>
+                </div>
+              )}
+              {mega && (
+                <div className="flex items-center justify-center gap-3 px-4 py-2.5 rounded-2xl bg-amber-500/10 border border-amber-400/50">
+                  <span className="w-11 h-11 shrink-0 rounded-full bg-gradient-to-br from-amber-300 via-red-500 to-fuchsia-600 p-0.5">
+                    <span className="w-full h-full rounded-full bg-slate-950 flex items-center justify-center text-xl">🏆</span>
+                  </span>
+                  <span className="text-sm font-extrabold text-amber-200">{megaText.certLine}</span>
+                </div>
+              )}
             </div>
           )}
           <div className="mt-3 text-xs font-bold uppercase tracking-wider text-slate-400">🏅 {t.certificate.badgesTitle}</div>

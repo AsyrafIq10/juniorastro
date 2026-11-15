@@ -1,4 +1,4 @@
-// Zero-asset Web Audio API synthesizer for Jezero 6: Mission Mars
+// Zero-asset Web Audio API synthesizer for Blast Off! (Interstellar V)
 
 class SpaceAudio {
   constructor() {

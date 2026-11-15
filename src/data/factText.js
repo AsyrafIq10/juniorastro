@@ -36,8 +36,8 @@ export const FACT_TEXT = {
         text: "Shackleton Crater sits at the Moon's south pole. Parts of it never see sunlight, so they stay colder than -170°C and have kept water ice frozen for billions of years.",
       },
       {
-        title: "Greenhouse",
-        text: "Space greenhouses grow plants without soil! The roots sit in water full of nutrients, and bright LED lights act like sunshine. The plants also make fresh air and help recycle water for the crew.",
+        title: "Water Recycler",
+        text: "In 2023 the space station reached a big goal: it recycles about 98% of its water! Water from washing, sweat and even breath is cleaned and used again, and NASA says it ends up purer than a lot of tap water on Earth.",
       },
       {
         title: "NASA DONKI Space Weather",
@@ -83,8 +83,8 @@ export const FACT_TEXT = {
         text: "Kawah Shackleton terletak di kutub selatan Bulan. Sesetengah bahagiannya tidak pernah disinari matahari, jadi suhunya lebih sejuk daripada -170°C dan ais air kekal beku selama berbilion tahun.",
       },
       {
-        title: "Rumah Hijau",
-        text: "Rumah hijau angkasa menanam tumbuhan tanpa tanah! Akarnya berada dalam air yang kaya dengan nutrien, dan lampu LED terang bertindak seperti cahaya matahari. Tumbuhan juga menghasilkan udara segar dan membantu mengitar semula air untuk kru.",
+        title: "Pengitar Semula Air",
+        text: "Pada 2023 stesen angkasa mencapai sasaran besar: ia mengitar semula kira-kira 98% airnya! Air daripada mandi, peluh dan juga nafas dibersihkan dan digunakan semula, dan NASA berkata air itu lebih bersih daripada kebanyakan air paip di Bumi.",
       },
       {
         title: "Cuaca Angkasa DONKI NASA",

@@ -3,7 +3,7 @@ import { TASK_TEXT } from "./taskText.js";
 const BASE = {
   en: {
     gameTitle: "Blast Off!",
-    heroTagline: "Jezero 6 • Mars Rover Adventure",
+    heroTagline: "Interstellar V • Mars Rover Adventure",
     choosePlanet: "Choose Your Landing Site",
     marsTitle: "Mars: Jezero Crater",
     marsSubtitle: "5 Rover Tasks • Fly Home to Earth",
@@ -79,7 +79,7 @@ const BASE = {
       greenhouse: "Greenhouse",
     },
     intro: {
-      title: "Welcome to Jezero 6, Cadet!",
+      title: "Welcome to Jezero Crater, Cadet!",
       capLine:
         "Hi! I'm Dr Farah! Your mission: drive our rover to 5 checkpoints around Jezero Crater. Every task has a tough choice, and there's no perfect answer! Finish all 5 to earn your ride home to Earth.",
       startBtn: "Start Mission",
@@ -125,7 +125,7 @@ const BASE = {
     nasaModal: {
       title: "NASA Science & Data",
       intro:
-        "Jezero 6: Mission Mars is inspired by real NASA Mars missions and open science datasets curated for young explorers:",
+        "Blast Off! by Interstellar V is inspired by real NASA Mars missions and open science datasets curated for young explorers:",
       items: [
         {
           name: "NASA Perseverance Rover (MOXIE & MEDA)",
@@ -145,7 +145,7 @@ const BASE = {
 
   ms: {
     gameTitle: "Blast Off!",
-    heroTagline: "Jezero 6 • Pengembaraan Rover Marikh",
+    heroTagline: "Interstellar V • Pengembaraan Rover Marikh",
     choosePlanet: "Pilih Tapak Pendaratan Anda",
     marsTitle: "Marikh: Kawah Jezero",
     marsSubtitle: "5 Tugasan Rover • Terbang Pulang ke Bumi",
@@ -221,7 +221,7 @@ const BASE = {
       greenhouse: "Rumah Hijau",
     },
     intro: {
-      title: "Selamat Datang ke Jezero 6, Kadet!",
+      title: "Selamat Datang ke Kawah Jezero, Kadet!",
       capLine:
         "Hai! Saya Dr Farah! Misi anda: pandu rover kita ke 5 pusat pemeriksaan di sekitar Kawah Jezero. Setiap tugasan ada pilihan yang sukar, dan tiada jawapan sempurna! Selesaikan kesemua 5 untuk pulang ke Bumi.",
       startBtn: "Mula Misi",
@@ -267,7 +267,7 @@ const BASE = {
     nasaModal: {
       title: "Sains & Data NASA",
       intro:
-        "Jezero 6: Misi Marikh diinspirasikan oleh misi Marikh NASA sebenar dan set data sains terbuka untuk penjelajah muda:",
+        "Blast Off! oleh Interstellar V diinspirasikan oleh misi Marikh NASA sebenar dan set data sains terbuka untuk penjelajah muda:",
       items: [
         {
           name: "Rover Perseverance NASA (MOXIE & MEDA)",

@@ -8,6 +8,7 @@ import PlayStage from "./PlayStage";
 import { SECRET_TEXT, SECRET_QUIZ } from "../data/secretText";
 import { pauseState } from "../utils/pause";
 import { spaceAudio } from "../utils/sound";
+import { GfxContext, DecoLight, canvasQuality } from "../utils/gfx";
 
 // =====================================================================
 // Hidden quest: the rover falls through a wormhole onto an alien ship.
@@ -163,7 +164,7 @@ export function ShipRoverModel({ groupRef, wheelRefs, headRef }) {
           </mesh>
         ))}
       </group>
-      <pointLight position={[0, 0.8, 1.4]} color="#fef3c7" intensity={4} distance={6} />
+      <DecoLight position={[0, 0.8, 1.4]} color="#fef3c7" intensity={4} distance={6} />
     </group>
   );
 }
@@ -411,7 +412,7 @@ export function Portal({ position, rotation, show, color = "#a855f7" }) {
         <ringGeometry args={[0.6, 1.3, 40]} />
         <meshBasicMaterial color="#c084fc" transparent opacity={0.4} side={THREE.DoubleSide} depthWrite={false} />
       </mesh>
-      <pointLight color={color} intensity={10} distance={9} />
+      <DecoLight color={color} intensity={10} distance={9} />
     </group>
   );
 }
@@ -501,7 +502,7 @@ function ShipWorld({ t, collected, placed, deskReady, ending }) {
             </Spinner>
           );
         })}
-        <pointLight position={[0, 2.2, 0]} color="#22d3ee" intensity={deskReady || ending ? 8 : 3} distance={8} />
+        <DecoLight position={[0, 2.2, 0]} color="#22d3ee" intensity={deskReady || ending ? 8 : 3} distance={8} />
       </group>
       {!ending && <RoomSign position={[0, 3.2, 0]} text={`🛸 ${t.desk}`} />}
 
@@ -553,7 +554,7 @@ function ShipWorld({ t, collected, placed, deskReady, ending }) {
           <pointLight color="#facc15" intensity={6} distance={6} />
         </Spinner>
       )}
-      <pointLight position={[0, 4, -28]} color="#a855f7" intensity={10} distance={22} />
+      <DecoLight position={[0, 4, -28]} color="#a855f7" intensity={10} distance={22} />
       <RoomSign position={[0, 3.0, -14.5]} text={`🧑‍✈️ ${t.places.captain}`} color="#c4b5fd" />
 
       {/* ===== Canteen ===== */}
@@ -601,7 +602,7 @@ function ShipWorld({ t, collected, placed, deskReady, ending }) {
           </mesh>
         )}
       </group>
-      <pointLight position={[21, 4, 0]} color="#5eead4" intensity={6} distance={18} />
+      <DecoLight position={[21, 4, 0]} color="#5eead4" intensity={6} distance={18} />
       <RoomSign position={[14.6, 3.0, 0]} text={`🍽️ ${t.places.canteen}`} color="#5eead4" />
       <RoomSign position={[27, 3.4, 0]} text={`🍪 ${t.machine}`} color="#6ee7b7" />
 
@@ -644,7 +645,7 @@ function ShipWorld({ t, collected, placed, deskReady, ending }) {
           </mesh>
         </group>
       ))}
-      <pointLight position={[-21, 4, 0]} color="#fbbf24" intensity={6} distance={18} />
+      <DecoLight position={[-21, 4, 0]} color="#fbbf24" intensity={6} distance={18} />
       <RoomSign position={[-14.6, 3.0, 0]} text={`💰 ${t.places.treasure}`} color="#fcd34d" />
       <RoomSign position={[-27, 3.2, 0]} text={`💎 ${t.vault}`} color="#f0abfc" />
     </>
@@ -1103,7 +1104,7 @@ function VaultModal({ t, play, soundOn, onWin, onClose }) {
 // ---------------------------------------------------------------------
 // The quest
 // ---------------------------------------------------------------------
-export default function WormholeQuest({ lang, play, soundOn, locked: externalLock, onSfx, onStageChange, onComplete, onPause }) {
+export default function WormholeQuest({ lang, play, soundOn, locked: externalLock, onSfx, onStageChange, onComplete, onPause, lowGfx = false }) {
   const t = SECRET_TEXT[lang] || SECRET_TEXT.en;
   // suck | loading | drop | intro | explore | endItems | endAliens | endPortal | flash
   const [stage, setStage] = useState("suck");
@@ -1244,13 +1245,15 @@ export default function WormholeQuest({ lang, play, soundOn, locked: externalLoc
       {/* 3D ship (built during the loading screen so it's ready) */}
       {stage !== "suck" && (
         <div className="absolute inset-0 bg-[#050816]">
-          <Canvas shadows camera={{ position: [6.5, 4.8, 11.5], fov: 55 }}>
+          <Canvas key={lowGfx ? "low" : "high"} {...canvasQuality(lowGfx)} camera={{ position: [6.5, 4.8, 11.5], fov: 55 }}>
+            <GfxContext.Provider value={lowGfx}>
             <color attach="background" args={["#050816"]} />
             <fog attach="fog" args={["#050816", 30, 70]} />
-            <ambientLight intensity={0.55} color="#c7d2fe" />
+            {/* low graphics drops the room lights, so the base light is a bit brighter */}
+            <ambientLight intensity={lowGfx ? 0.85 : 0.55} color="#c7d2fe" />
             <hemisphereLight args={["#a5b4fc", "#1e1b4b", 0.5]} />
             <directionalLight position={[10, 20, 8]} intensity={0.9} castShadow shadow-mapSize={[1024, 1024]} />
-            <Stars radius={80} depth={40} count={2200} factor={3} fade />
+            <Stars radius={80} depth={40} count={lowGfx ? 700 : 2200} factor={3} fade />
             <ShipWorld t={t} collected={collected} placed={placed} deskReady={ITEM_KEYS.some((k) => collected[k] && !placed[k])} ending={ending} />
             <Portal position={[0, 8.5, SPAWN.z]} rotation={[-Math.PI / 2, 0, 0]} show={stage === "drop" || stage === "loading"} />
             <Portal position={[PORTAL_POS.x, 1.6, PORTAL_POS.z]} rotation={[0, Math.PI, 0]} show={stage === "endPortal" || stage === "flash" || stage === "endAliens"} color="#22d3ee" />
@@ -1281,6 +1284,7 @@ export default function WormholeQuest({ lang, play, soundOn, locked: externalLoc
               }}
             />
             <CameraDirector simRef={simRef} shot={shot} />
+            </GfxContext.Provider>
           </Canvas>
         </div>
       )}

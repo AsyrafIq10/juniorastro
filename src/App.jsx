@@ -44,6 +44,7 @@ import { EVENTS, EVENT_AFTER_DRIVE_SECONDS } from "./data/events";
 import { configureSpeech, stopSpeaking } from "./utils/speech";
 import { pauseState } from "./utils/pause";
 import { STAR_BONUS } from "./data/playConfigs";
+import { loadLowGfx, saveLowGfx } from "./utils/gfx";
 
 const INITIAL_ROVER = { level: 0, damaged: false, scienceUpgrades: 0 };
 const NO_DPAD = { up: false, down: false, left: false, right: false };
@@ -160,6 +161,8 @@ export default function App() {
   const [paused, setPausedState] = useState(false);
   const [autoRead, setAutoRead] = useState(true);
   const [bigText, setBigText] = useState(false);
+  // Low graphics (no shadows, lower resolution, fewer lights) for slower laptops; remembered on this device
+  const [lowGfx, setLowGfx] = useState(loadLowGfx);
   // Anything on top of the crater stops the rover
   const inputLocked = modalOpen || paused || showLog || showHelp || showSettings || showNasa;
 
@@ -416,6 +419,7 @@ export default function App() {
   const handleMegaComplete = () => {
     roverState.current = createRoverState();
     setMegaDone(true);
+    setMissionLog((log) => [...log, { type: "mega" }]);
     setMegaPortal(null);
     setMegaStage(null);
     setPhase("playing");
@@ -432,6 +436,7 @@ export default function App() {
     // The aliens' portal drops the rover back at the compound
     roverState.current = createRoverState();
     setSecretDone(true);
+    setMissionLog((log) => [...log, { type: "secret" }]);
     setSecretStage(null);
     setPhase("playing");
     setSecretAward(true);
@@ -733,6 +738,7 @@ export default function App() {
           flagLabel={t.flag?.checkpoint || ""}
           skyLabels={t.sky}
           onFirstHop={() => showToast(t.sky.lowGravityTip)}
+          lowGfx={lowGfx}
           secretActive={phase === "playing" && !secretDone && mission === "mars"}
           spacePieces={phase === "playing" && mission === "moon" && !megaDone ? SPACE_PIECES.map((_, i) => i).filter((i) => !megaPieces.includes(i)) : []}
           megaPortal={phase === "playing" && mission === "moon" && !megaDone ? megaPortal : null}
@@ -840,6 +846,7 @@ export default function App() {
       {/* Hidden wormhole quest */}
       {phase === "secret" && (
         <WormholeQuest
+          lowGfx={lowGfx}
           lang={lang}
           play={t.play}
           soundOn={soundOn}
@@ -857,6 +864,7 @@ export default function App() {
       {phase === "playing" && megaAssembling && <MegaAssemble lang={lang} onDone={handleMegaAssembled} />}
       {phase === "mega" && (
         <MegaQuest
+          lowGfx={lowGfx}
           lang={lang}
           soundOn={soundOn}
           locked={paused || showSettings || showHelp || showLog || showNasa}
@@ -921,6 +929,9 @@ export default function App() {
       {phase === "victory" && (
         <Leaderboard
           t={t}
+          lang={lang}
+          secret={secretDone}
+          mega={megaDone}
           stats={stats}
           badges={badges.length}
           stars={totalStars}
@@ -1081,7 +1092,7 @@ export default function App() {
         />
       )}
 
-      {showLog && <MissionLog t={t} log={missionLog} badges={badges} onClose={() => setShowLog(false)} />}
+      {showLog && <MissionLog t={t} lang={lang} log={missionLog} badges={badges} onClose={() => setShowLog(false)} />}
       {showHelp && <HelpModal t={t} onClose={() => setShowHelp(false)} />}
 
       {toast && (
@@ -1107,6 +1118,9 @@ export default function App() {
       {phase === "certificate" && (
         <CertificateModal
           t={t}
+          lang={lang}
+          secret={secretDone}
+          mega={megaDone}
           stats={stats}
           roverLevel={rover.level}
           badges={badges}
@@ -1148,6 +1162,14 @@ export default function App() {
           onToggleBigText={() => {
             playSfx("click");
             setBigText((v) => !v);
+          }}
+          lowGfx={lowGfx}
+          onToggleLowGfx={() => {
+            playSfx("click");
+            setLowGfx((v) => {
+              saveLowGfx(!v);
+              return !v;
+            });
           }}
           onClose={() => {
             playSfx("click");

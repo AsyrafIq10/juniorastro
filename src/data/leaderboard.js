@@ -1,6 +1,6 @@
 import { SURVIVAL_KEYS } from "./tasks";
 
-// Mission points + a pretend leaderboard of other Jezero 6 cadets (hardcoded, no server).
+// Mission points + a pretend leaderboard of other Interstellar V cadets (hardcoded, no server).
 
 export const POINT_RULES = {
   science: 10, // per Science point
@@ -10,7 +10,10 @@ export const POINT_RULES = {
   rover: 50, // per rover upgrade level
 };
 
-export function missionPoints({ stats, badges, stars, roverLevel }) {
+// Bonus points for the hidden quests (only shown when earned)
+export const SECRET_POINTS = { secret: 150, mega: 300 };
+
+export function missionPoints({ stats, badges, stars, roverLevel, secret = false, mega = false }) {
   const kept = SURVIVAL_KEYS.reduce((sum, k) => sum + (stats[k] || 0), 0);
   const rows = [
     ...("science" in stats ? [{ key: "science", icon: "🔬", value: stats.science * POINT_RULES.science }] : []),
@@ -18,6 +21,8 @@ export function missionPoints({ stats, badges, stars, roverLevel }) {
     { key: "badges", icon: "🏅", value: badges * POINT_RULES.badge },
     { key: "stars", icon: "⭐", value: stars * POINT_RULES.star },
     { key: "rover", icon: "🚙", value: roverLevel * POINT_RULES.rover },
+    ...(secret ? [{ key: "secret", icon: "❔", value: SECRET_POINTS.secret }] : []),
+    ...(mega ? [{ key: "mega", icon: "🏆", value: SECRET_POINTS.mega }] : []),
   ];
   return { rows, total: rows.reduce((sum, r) => sum + r.value, 0) };
 }

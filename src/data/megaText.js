@@ -47,6 +47,11 @@ export const MEGA_TEXT = {
     badgeName: "MEGA",
     badgeText: "You found every piece of space, beat Gearlord Z and won the Champion Trophy. Legendary!",
     badgeBtn: "Back to the Moon base",
+    logTag: "MEGA discovery",
+    logTitle: "MEGA Badge: Champion Trophy",
+    logText: "Found all 6 pieces of space and beat Gearlord Z!",
+    lbRow: "MEGA badge",
+    certLine: "Defeated Gearlord Z and won the Champion Trophy!",
   },
   ms: {
     pieceLabel: "???",
@@ -95,5 +100,10 @@ export const MEGA_TEXT = {
     badgeName: "MEGA",
     badgeText: "Awak jumpa semua serpihan angkasa, kalahkan Gearlord Z dan menang Trofi Juara. Hebat!",
     badgeBtn: "Kembali ke pangkalan Bulan",
+    logTag: "Penemuan MEGA",
+    logTitle: "Lencana MEGA: Trofi Juara",
+    logText: "Menjumpai kesemua 6 serpihan angkasa dan mengalahkan Gearlord Z!",
+    lbRow: "Lencana MEGA",
+    certLine: "Mengalahkan Gearlord Z dan memenangi Trofi Juara!",
   },
 };
