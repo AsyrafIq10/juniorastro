@@ -23,14 +23,15 @@ const SPAWN = { x: 0, z: 4.5, rotY: Math.PI };
 const CAPTAIN_START = { x: 0, z: -16, rotY: Math.PI };
 const PORTAL_POS = { x: 0, z: 6.6 };
 
-// Where the rover may drive (union of these shapes)
+// Where the rover may drive (union of these shapes). Each shape is shrunk by ROVER_R, so the
+// corridors reach 2 units into the rooms to make sure the shrunken shapes overlap at the doorways.
 const ROOMS = [
   { id: "centre", circle: true, x: 0, z: 0, r: 8 },
-  { id: "centre", x0: -1.6, x1: 1.6, z0: -15, z1: -6 },
+  { id: "centre", x0: -1.6, x1: 1.6, z0: -16, z1: -6 },
   { id: "captain", x0: -7, x1: 7, z0: -42, z1: -14 },
-  { id: "centre", x0: 6, x1: 15, z0: -1.6, z1: 1.6 },
+  { id: "centre", x0: 6, x1: 16, z0: -1.6, z1: 1.6 },
   { id: "canteen", x0: 14, x1: 28, z0: -8, z1: 8 },
-  { id: "centre", x0: -15, x1: -6, z0: -1.6, z1: 1.6 },
+  { id: "centre", x0: -16, x1: -6, z0: -1.6, z1: 1.6 },
   { id: "treasure", x0: -28, x1: -14, z0: -8, z1: 8 },
 ];
 
