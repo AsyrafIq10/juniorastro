@@ -4,7 +4,7 @@ import CapAvatar from "./CapAvatar";
 
 export function SettingsModal({ t, lang, onChangeLang, soundOn, onToggleSound, musicOn, onToggleMusic, autoRead, onToggleAutoRead, bigText, onToggleBigText, onClose }) {
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm">
       <div className="w-full max-w-md bg-slate-900 border border-white/15 rounded-3xl p-6 shadow-2xl">
         <div className="flex items-center justify-between mb-5">
           <h2 className="font-display text-xl font-bold text-white">{t.settings}</h2>
@@ -151,7 +151,7 @@ export function LoseModal({ t, depletedResource, onRetry }) {
 
 export function NasaDataModal({ t, onClose }) {
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-sm">
       <div className="w-full max-w-lg bg-slate-900 border border-sky-400/35 rounded-3xl p-6 shadow-2xl">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
@@ -196,7 +196,7 @@ export function NasaDataModal({ t, onClose }) {
 export function CreditsModal({ t, onClose }) {
   const c = t.creditsModal;
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm">
       <div className="w-full max-w-md max-h-[90vh] overflow-y-auto bg-slate-900 border border-white/15 rounded-3xl p-6 shadow-2xl">
         <div className="flex items-center justify-between mb-5">
           <h2 className="font-display text-xl font-bold text-white">{c.title}</h2>

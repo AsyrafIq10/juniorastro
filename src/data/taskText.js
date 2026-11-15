@@ -4,7 +4,7 @@
 export const TASK_TEXT = {
   en: {
     musicLabel: "Background Music",
-    autoReadLabel: "Cap reads aloud",
+    autoReadLabel: "Dr Farah reads aloud",
     bigTextLabel: "Bigger text",
     help: {
       title: "How to Play",
@@ -182,7 +182,7 @@ export const TASK_TEXT = {
       }
     },
     blast: {
-      capFact: "Cap's Space Fact",
+      capFact: "Dr Farah's Space Fact",
       logAdded: "📔 +1 sticker in your Mission Log!",
       logEmpty: "Finish a task to get your first sticker!",
       logStickers: "stickers collected",
@@ -473,7 +473,7 @@ export const TASK_TEXT = {
 
   ms: {
     musicLabel: "Muzik Latar",
-    autoReadLabel: "Cap membaca dengan kuat",
+    autoReadLabel: "Dr Farah membaca dengan kuat",
     bigTextLabel: "Teks lebih besar",
     help: {
       title: "Cara Bermain",
@@ -651,7 +651,7 @@ export const TASK_TEXT = {
       }
     },
     blast: {
-      capFact: "Fakta Angkasa Cap",
+      capFact: "Fakta Angkasa Dr Farah",
       logAdded: "📔 +1 pelekat dalam Log Misi anda!",
       logEmpty: "Selesaikan satu tugasan untuk pelekat pertama anda!",
       logStickers: "pelekat dikumpul",

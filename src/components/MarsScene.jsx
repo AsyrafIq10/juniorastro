@@ -44,6 +44,9 @@ function marsHeight(x, z) {
   return craterRim + micro;
 }
 
+// Hidden wormhole anomaly: far out near the crater rim, away from every task and the base
+export const SECRET_POS = { x: -26, z: 7 };
+
 const MODULE_POSITIONS = {
   habitat: new THREE.Vector3(0, 1.2, 0),
   solar: new THREE.Vector3(7.5, 0.8, -3.5),
@@ -817,6 +820,76 @@ function GuideArrow({ roverState, target, visible }) {
 }
 
 // ===== Base buildings: extra detail so the outpost feels like a real place =====
+// A strange swirling rift with a purple light beam: no label on the map, just "???"
+function SecretAnomaly() {
+  const ringRef = useRef();
+  const ring2Ref = useRef();
+  const coreRef = useRef();
+  const rocksRef = useRef();
+  const beamRef = useRef();
+  const y = getTerrainHeight(SECRET_POS.x, SECRET_POS.z);
+  useFrame(({ clock }) => {
+    const t = clock.getElapsedTime();
+    if (ringRef.current) {
+      ringRef.current.rotation.z = t * 1.6;
+      ringRef.current.rotation.x = Math.sin(t * 0.7) * 0.3;
+    }
+    if (ring2Ref.current) {
+      ring2Ref.current.rotation.z = -t * 2.3;
+      ring2Ref.current.rotation.y = Math.cos(t * 0.5) * 0.4;
+    }
+    if (coreRef.current) coreRef.current.scale.setScalar(1 + Math.sin(t * 3) * 0.12);
+    if (rocksRef.current) rocksRef.current.rotation.y = t * 0.7;
+    if (beamRef.current) beamRef.current.material.opacity = 0.22 + Math.sin(t * 2.2) * 0.1;
+  });
+  return (
+    <group position={[SECRET_POS.x, y, SECRET_POS.z]}>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.05, 0]}>
+        <circleGeometry args={[2.8, 40]} />
+        <meshBasicMaterial color="#2e1065" transparent opacity={0.55} depthWrite={false} />
+      </mesh>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.07, 0]}>
+        <ringGeometry args={[2.4, 2.6, 40]} />
+        <meshBasicMaterial color="#c084fc" transparent opacity={0.7} depthWrite={false} />
+      </mesh>
+      <group position={[0, 2.3, 0]}>
+        <mesh ref={ringRef}>
+          <torusGeometry args={[1.35, 0.12, 12, 48]} />
+          <meshStandardMaterial color="#a855f7" emissive="#c084fc" emissiveIntensity={2.5} />
+        </mesh>
+        <mesh ref={ring2Ref}>
+          <torusGeometry args={[1.6, 0.05, 8, 48]} />
+          <meshStandardMaterial color="#22d3ee" emissive="#22d3ee" emissiveIntensity={2} />
+        </mesh>
+        <mesh ref={coreRef}>
+          <sphereGeometry args={[0.85, 24, 16]} />
+          <meshBasicMaterial color="#12051f" />
+        </mesh>
+        <mesh>
+          <sphereGeometry args={[1.08, 24, 16]} />
+          <meshBasicMaterial color="#7c3aed" transparent opacity={0.25} depthWrite={false} />
+        </mesh>
+      </group>
+      <mesh ref={beamRef} position={[0, 15, 0]}>
+        <cylinderGeometry args={[0.35, 0.9, 30, 16, 1, true]} />
+        <meshBasicMaterial color="#c084fc" transparent opacity={0.28} depthWrite={false} side={THREE.DoubleSide} />
+      </mesh>
+      <group ref={rocksRef} position={[0, 2.3, 0]}>
+        {[0, 1, 2, 3, 4, 5].map((i) => (
+          <mesh key={i} position={[Math.cos(i * 1.05) * 2.2, Math.sin(i * 2.1) * 0.6, Math.sin(i * 1.05) * 2.2]} rotation={[i, i * 2, 0]}>
+            <dodecahedronGeometry args={[0.16 + (i % 3) * 0.08, 0]} />
+            <meshStandardMaterial color="#4b5563" emissive="#6d28d9" emissiveIntensity={0.5} />
+          </mesh>
+        ))}
+      </group>
+      <pointLight position={[0, 2.3, 0]} color="#a855f7" intensity={10} distance={12} />
+      <Html position={[0, 4.4, 0]} center distanceFactor={14} zIndexRange={[10, 0]}>
+        <div className="pointer-events-none px-3 py-1 rounded-full bg-violet-950/85 border-2 border-violet-400 text-violet-200 font-display font-bold text-lg animate-pulse">???</div>
+      </Html>
+    </group>
+  );
+}
+
 const COMMS_TOWER = { x: 3.5, z: -6.5 };
 
 // A short paved strip that follows the ground, with a row of "chase" lights on each side
@@ -1108,7 +1181,8 @@ export const MODULE_COLLIDERS = [
 const WORLD_CACHE = {};
 function worldData() {
   if (!WORLD_CACHE[WORLD]) {
-    const rocks = buildRocks();
+    // keep the ground around the wormhole anomaly clear so the rover can reach it
+    const rocks = buildRocks().filter((r) => Math.hypot(r.pos[0] - SECRET_POS.x, r.pos[2] - SECRET_POS.z) > 4.5);
     const pad = TASKS[TASKS.length - 1].pos;
     const rockColliders = rocks.filter((r) => r.scale[0] > 0.6).map((r) => ({ x: r.pos[0], z: r.pos[2], r: r.scale[0] * 0.85 }));
     WORLD_CACHE[WORLD] = {
@@ -1836,6 +1910,7 @@ export default function MarsScene({
   flagLabel = "",
   skyLabels = { phobos: "Phobos", deimos: "Deimos", earth: "Earth" },
   onFirstHop,
+  secretActive = false,
 }) {
   const moon = WORLD === "moon";
   const isNight = env === "night" || env === "moonNight" || env === "moonDark";
@@ -1920,6 +1995,7 @@ export default function MarsScene({
         {allDone && playing && !flagActive && <HomeCheckpoint label={homeLabel} />}
         {FLAG_POS && flagActive && playing && <FlagCheckpoint label={flagLabel} />}
         {FLAG_POS && flagPlanted && <PlantedFlag />}
+        {secretActive && <SecretAnomaly />}
 
         <MiniRover
           roverMode={roverMode}

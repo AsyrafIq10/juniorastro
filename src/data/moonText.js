@@ -30,7 +30,7 @@ export const MOON_TEXT = {
     intro: {
       title: "Welcome to Shackleton Crater, Cadet!",
       capLine:
-        "Beep-boop! We landed near the Moon's south pole! Drive the rover to 5 checkpoints and keep our Power, Oxygen, Food and Shielding safe until the relief ship arrives.",
+        "Hi! I'm Dr Farah! We landed near the Moon's south pole! Drive the rover to 5 checkpoints and keep our Power, Oxygen, Food and Shielding safe until the relief ship arrives.",
       startBtn: "Start Moon Mission",
     },
     victory: {
@@ -334,7 +334,7 @@ export const MOON_TEXT = {
     intro: {
       title: "Selamat Datang ke Kawah Shackleton, Kadet!",
       capLine:
-        "Bip-bup! Kita mendarat dekat kutub selatan Bulan! Pandu rover ke 5 pusat pemeriksaan dan jaga Kuasa, Oksigen, Makanan dan Perisai sehingga kapal bantuan tiba.",
+        "Hai! Saya Dr Farah! Kita mendarat dekat kutub selatan Bulan! Pandu rover ke 5 pusat pemeriksaan dan jaga Kuasa, Oksigen, Makanan dan Perisai sehingga kapal bantuan tiba.",
       startBtn: "Mula Misi Bulan",
     },
     victory: {

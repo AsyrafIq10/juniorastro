@@ -77,7 +77,7 @@ const BASE = {
     intro: {
       title: "Welcome to Jezero 6, Cadet!",
       capLine:
-        "Beep-boop! I'm Cap! Your mission: drive our rover to 5 checkpoints around Jezero Crater. Every task has a tough choice, and there's no perfect answer! Finish all 5 to earn your ride home to Earth.",
+        "Hi! I'm Dr Farah! Your mission: drive our rover to 5 checkpoints around Jezero Crater. Every task has a tough choice, and there's no perfect answer! Finish all 5 to earn your ride home to Earth.",
       startBtn: "Start Mission",
     },
     lose: {
@@ -215,7 +215,7 @@ const BASE = {
     intro: {
       title: "Selamat Datang ke Jezero 6, Kadet!",
       capLine:
-        "Bip-bup! Saya Cap! Misi anda: pandu rover kita ke 5 pusat pemeriksaan di sekitar Kawah Jezero. Setiap tugasan ada pilihan yang sukar, dan tiada jawapan sempurna! Selesaikan kesemua 5 untuk pulang ke Bumi.",
+        "Hai! Saya Dr Farah! Misi anda: pandu rover kita ke 5 pusat pemeriksaan di sekitar Kawah Jezero. Setiap tugasan ada pilihan yang sukar, dan tiada jawapan sempurna! Selesaikan kesemua 5 untuk pulang ke Bumi.",
       startBtn: "Mula Misi",
     },
     lose: {

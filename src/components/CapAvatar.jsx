@@ -1,80 +1,32 @@
 import React from "react";
 import SpeakButton from "./SpeakButton";
 import { useAutoSpeak } from "../utils/speech";
+import drFarahImg from "../assets/dr-farah.png";
 
+export const GUIDE_NAME = "Dr Farah";
+export const GUIDE_IMG = drFarahImg;
+
+// Dr Farah, the mission guide: portrait + speech bubble
 export default function CapAvatar({ mood = "happy", message }) {
-  const visorConfig = {
-    happy: {
-      border: "border-cyan-400/70",
-      glow: "shadow-[0_0_24px_rgba(34,211,238,0.45)]",
-      visorBg: "bg-cyan-950",
-      eyeColor: "bg-cyan-300",
-      labelColor: "text-cyan-300",
-    },
-    worried: {
-      border: "border-amber-400/80",
-      glow: "shadow-[0_0_24px_rgba(251,191,36,0.45)]",
-      visorBg: "bg-amber-950",
-      eyeColor: "bg-amber-300",
-      labelColor: "text-amber-300",
-    },
-    alert: {
-      border: "border-rose-500/90",
-      glow: "shadow-[0_0_28px_rgba(244,63,94,0.6)]",
-      visorBg: "bg-rose-950",
-      eyeColor: "bg-rose-400",
-      labelColor: "text-rose-300",
-    },
+  const ring = {
+    happy: "border-cyan-400/70 shadow-[0_0_24px_rgba(34,211,238,0.45)]",
+    worried: "border-amber-400/80 shadow-[0_0_24px_rgba(251,191,36,0.45)]",
+    alert: "border-rose-500/90 shadow-[0_0_28px_rgba(244,63,94,0.6)]",
   };
-
-  const v = visorConfig[mood] || visorConfig.happy;
+  const label = { happy: "text-cyan-300", worried: "text-amber-300", alert: "text-rose-300" };
   useAutoSpeak(message);
 
   return (
     <div className="pointer-events-none flex items-end gap-3 max-w-md">
-      {/* Animated Hologram Rover-Bot */}
       <div
-        className={`relative shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-slate-900/85 backdrop-blur-md border-2 ${v.border} ${v.glow} flex flex-col items-center justify-center animate-float`}
+        className={`relative shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-slate-900/85 backdrop-blur-md border-2 ${ring[mood] || ring.happy} flex flex-col items-center justify-end overflow-hidden animate-float`}
       >
-        {/* Antenna */}
-        <div className="absolute -top-2.5 w-1 h-3 bg-slate-400 rounded-full">
-          <div
-            className={`w-2.5 h-2.5 -ml-[3px] -mt-1.5 rounded-full ${v.eyeColor} animate-ping opacity-75`}
-          />
-          <div className={`w-2.5 h-2.5 -ml-[3px] -mt-2.5 rounded-full ${v.eyeColor}`} />
-        </div>
-
-        {/* Visor */}
-        <div
-          className={`w-12 sm:w-14 h-7 sm:h-8 rounded-xl ${v.visorBg} border border-white/15 flex items-center justify-center gap-2.5 overflow-hidden`}
-        >
-          {mood === "happy" && (
-            <>
-              <span className={`w-2.5 h-2.5 rounded-full ${v.eyeColor}`} />
-              <span className={`w-2.5 h-2.5 rounded-full ${v.eyeColor}`} />
-            </>
-          )}
-          {mood === "worried" && (
-            <>
-              <span className={`w-3 h-1.5 rounded-full ${v.eyeColor} -rotate-12`} />
-              <span className={`w-3 h-1.5 rounded-full ${v.eyeColor} rotate-12`} />
-            </>
-          )}
-          {mood === "alert" && (
-            <>
-              <span className={`w-2.5 h-2.5 rotate-45 ${v.eyeColor} animate-pulse`} />
-              <span className={`w-2.5 h-2.5 rotate-45 ${v.eyeColor} animate-pulse`} />
-            </>
-          )}
-        </div>
-
-        {/* Nameplate */}
-        <span className={`mt-1 text-[10px] font-extrabold tracking-widest uppercase ${v.labelColor}`}>
-          CAP
+        <img src={drFarahImg} alt={GUIDE_NAME} className="absolute inset-x-0 top-0 w-full h-[82%] object-cover object-top" draggable={false} />
+        <span className={`relative z-10 w-full text-center bg-slate-950/85 py-0.5 text-[9px] font-extrabold tracking-wider uppercase ${label[mood] || label.happy}`}>
+          {GUIDE_NAME}
         </span>
       </div>
 
-      {/* Speech Bubble */}
       {message && (
         <div className="pointer-events-auto flex items-start gap-2 bg-slate-900/85 backdrop-blur-md border border-white/15 rounded-2xl rounded-bl-sm pl-4 pr-2 py-2.5 shadow-xl text-xs sm:text-sm text-slate-100 leading-snug max-w-xs sm:max-w-sm">
           <span className="flex-1">{message}</span>

@@ -170,12 +170,13 @@ const CP_STYLE = {
   quiz: { icon: "🏅", cls: "from-violet-500 to-fuchsia-500 text-white" },
   home: { icon: "🚀", cls: "from-sky-400 to-cyan-400 text-slate-950" },
   flag: { icon: "🚩", cls: "from-red-500 to-amber-400 text-white" },
+  secret: { icon: "🌀", cls: "from-violet-600 to-fuchsia-500 text-white" },
 };
 
 // "Press E" prompt when the rover is parked inside a checkpoint ring
 function EnterPrompt({ t, cp, onEnter }) {
   const st = CP_STYLE[cp.kind];
-  const label = cp.kind === "task" ? t.tasks[cp.index].short : cp.kind === "quiz" ? `${t.blast.quizStation}: ${t.tasks[cp.index].quiz.badge}` : cp.kind === "flag" ? t.flag.plantLabel : t.blast.homeCheckpoint;
+  const label = cp.kind === "secret" ? "???" : cp.kind === "task" ? t.tasks[cp.index].short : cp.kind === "quiz" ? `${t.blast.quizStation}: ${t.tasks[cp.index].quiz.badge}` : cp.kind === "flag" ? t.flag.plantLabel : t.blast.homeCheckpoint;
   return (
     <div className="fixed inset-x-0 bottom-28 sm:bottom-32 z-20 flex justify-center px-4 pointer-events-none">
       <button
@@ -286,12 +287,12 @@ function Gauge({ k, value, t, roverLevel }) {
     : val;
   return (
     <div className={`px-2 sm:px-3 py-1.5 sm:py-2 rounded-2xl bg-slate-900/80 backdrop-blur-md border ${isLow ? "border-rose-500/80 animate-pulse" : meta.border} shadow-lg`}>
-      <div className="flex items-center justify-between text-xs font-bold mb-1">
-        <span className="flex items-center gap-1 text-slate-200 min-w-0">
-          <span>{meta.icon}</span>
-          <span className="truncate hidden sm:inline">{t.resources[k]}</span>
+      <div className="flex items-center justify-between gap-1.5 text-[11px] sm:text-xs font-bold mb-1">
+        <span className="flex items-center gap-1 text-slate-100 min-w-0 leading-tight">
+          <span className="shrink-0">{meta.icon}</span>
+          <span className="whitespace-normal break-words">{t.resources[k]}</span>
         </span>
-        <span className={isLow ? "text-rose-400 font-extrabold" : meta.text}>{isScience ? val : `${val}%`}</span>
+        <span className={`shrink-0 tabular-nums ${isLow ? "text-rose-400 font-extrabold" : meta.text}`}>{isScience ? val : `${val}%`}</span>
       </div>
       <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
         <div className={`h-full rounded-full transition-all duration-500 ${isLow ? "bg-rose-500" : meta.bar}`} style={{ width: `${width}%` }} />
@@ -325,6 +326,7 @@ export default function HUD({
   onPause,
   onHelp,
   onOpenLog,
+  secretBadge = false,
 }) {
   const setDpad = (dir, pressed) => {
     onDpadChange((prev) => ({ ...prev, [dir]: pressed }));
@@ -362,6 +364,11 @@ export default function HUD({
                     {task.badge}
                   </span>
                 ))}
+                {secretBadge && (
+                  <span title="?" className="ml-0.5 w-4 h-4 rounded-full bg-gradient-to-br from-violet-500 to-cyan-400 text-[10px] font-extrabold text-white flex items-center justify-center">
+                    ?
+                  </span>
+                )}
               </div>
             </div>
             <div
@@ -374,7 +381,7 @@ export default function HUD({
           </div>
 
           {/* 4 Resource Gauges */}
-          <div className="pointer-events-auto flex-1 min-w-[260px] max-w-2xl grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <div className="pointer-events-auto flex-1 min-w-[280px] max-w-3xl grid grid-cols-2 lg:grid-cols-4 gap-2">
             {STAT_KEYS.map((k) => (
               <Gauge key={k} k={k} value={stats[k]} t={t} roverLevel={roverLevel} />
             ))}

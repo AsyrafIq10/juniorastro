@@ -44,6 +44,9 @@ export const PLAY_CONFIGS = {
   lowPower: { type: "aim", env: "moonDay", scene: "switches", targets: 4, shots: 8, duration: 15, wobble: 12 },
   // Task 5: Final Lunar Night Freeze
   nightBalance: { type: "balance", env: "moonNight", scene: "seesaw", duration: 15, need: 7, drift: 1.1 },
+  // ===== Hidden wormhole quest: treasure room vault =====
+  vaultLock: { type: "aim", env: null, scene: "vault", targets: 4, shots: 9, duration: 18, wobble: 14 },
+
   fullHeat: { type: "hold", env: "moonNight", scene: "heater", tool: null, danger: "battery", hum: "printer", duration: 16, work: 0.13, dangerUp: 0.3, dangerDown: 0.35 },
 };
 

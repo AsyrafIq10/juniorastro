@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import MarsScene, { createRoverState } from "./components/MarsScene";
+import MarsScene, { createRoverState, SECRET_POS } from "./components/MarsScene";
+import WormholeQuest, { SecretBadgeModal } from "./components/WormholeQuest";
 import StartScreen, { EarthBackdrop } from "./components/StartScreen";
 import LaunchSequence from "./components/LaunchSequence";
 import HUD from "./components/HUD";
@@ -43,7 +44,7 @@ const NO_DPAD = { up: false, down: false, left: false, right: false };
 music.attach(spaceAudio);
 
 // Which background tune plays in each phase (null = let the launch sounds shine)
-const PHASE_MUSIC = { start: "menu", launch: null, intro: "mars", playing: "mars", lost: "mars", homeLaunch: null, victory: "victory", certificate: "victory" };
+const PHASE_MUSIC = { start: "menu", launch: null, intro: "mars", playing: "mars", secret: "menu", lost: "mars", homeLaunch: null, victory: "victory", certificate: "victory" };
 
 const EARTH_PHASES = ["victory", "certificate"];
 
@@ -120,7 +121,11 @@ export default function App() {
   const eventsUsedRef = useRef([]);
   const driveTimeRef = useRef(0);
   const eventPendingRef = useRef(null);
-  const modalOpen = !!scenario || quizTask != null || homePrompt || eventIndex != null || flagModal;
+  // Hidden wormhole quest (secret badge "?")
+  const [secretDone, setSecretDone] = useState(false);
+  const [secretAward, setSecretAward] = useState(false);
+  const [secretStage, setSecretStage] = useState(null);
+  const modalOpen = !!scenario || quizTask != null || homePrompt || eventIndex != null || flagModal || secretAward;
 
   const [focusModule, setFocusModule] = useState("habitat");
   const [selectedModule, setSelectedModule] = useState(null);
@@ -245,6 +250,9 @@ export default function App() {
     setFlagPlanted(false);
     setFlagModal(false);
     flagAwardRef.current = false;
+    setSecretDone(false);
+    setSecretAward(false);
+    setSecretStage(null);
     roverState.current = createRoverState();
     setDepletedResource(null);
     setFocusModule("habitat");
@@ -289,8 +297,10 @@ export default function App() {
     const flagPending = allDone && FLAG_POS && !flagPlanted;
     if (flagPending) list.push({ key: "flag", kind: "flag", index: -1, x: FLAG_POS.x, z: FLAG_POS.z });
     else if (allDone) list.push({ key: "home", kind: "home", index: -1, x: HOME_POS.x, z: HOME_POS.z });
+    // The secret is never shown on the map or task list, the rover just has to stumble on it
+    if (!secretDone) list.push({ key: "secret", kind: "secret", index: -1, x: SECRET_POS.x, z: SECRET_POS.z });
     return list;
-  }, [taskIndex, badges, allDone, flagPlanted]);
+  }, [taskIndex, badges, allDone, flagPlanted, secretDone]);
   const flagPending = allDone && !!FLAG_POS && !flagPlanted;
   const guideTarget = flagPending
     ? { x: FLAG_POS.x, z: FLAG_POS.z }
@@ -331,7 +341,23 @@ export default function App() {
     } else if (target.kind === "home") {
       setHomePrompt(true);
       playSfx("success");
+    } else if (target.kind === "secret") {
+      setNearCp(null);
+      setSecretStage("suck");
+      setPhase("secret");
+      playSfx("alert");
     }
+  };
+
+  const handleSecretStage = useCallback((s) => setSecretStage(s), []);
+  const handleSecretComplete = () => {
+    // The aliens' portal drops the rover back at the compound
+    roverState.current = createRoverState();
+    setSecretDone(true);
+    setSecretStage(null);
+    setPhase("playing");
+    setSecretAward(true);
+    playSfx("victory");
   };
 
   const handleBadge = (idx) => {
@@ -506,10 +532,10 @@ export default function App() {
   // Auto-pause when the tab/app is hidden; P toggles pause
   useEffect(() => {
     const onHide = () => {
-      if (document.hidden && phase === "playing") setPaused(true);
+      if (document.hidden && (phase === "playing" || phase === "secret")) setPaused(true);
     };
     const onKey = (e) => {
-      if (e.code === "KeyP" && phase === "playing") setPaused((v) => !v);
+      if (e.code === "KeyP" && (phase === "playing" || phase === "secret")) setPaused((v) => !v);
     };
     document.addEventListener("visibilitychange", onHide);
     window.addEventListener("keydown", onKey);
@@ -574,13 +600,13 @@ export default function App() {
 
   // Esc leaves rover mode (not while a task is open)
   useEffect(() => {
-    if (!roverMode || modalOpen) return undefined;
+    if (!roverMode || modalOpen || phase === "secret") return undefined;
     const onKey = (e) => {
       if (e.key === "Escape") setRover(false);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [roverMode, modalOpen]);
+  }, [roverMode, modalOpen, phase]);
 
   const handleResetCam = () => {
     playSfx("click");
@@ -596,7 +622,7 @@ export default function App() {
   return (
     <div className="relative w-screen h-screen overflow-hidden select-none">
       {/* 3D Jezero Crater (hidden once we're home on Earth) */}
-      {!onEarth && (
+      {!onEarth && !(phase === "secret" && secretStage !== "suck") && (
         <MarsScene
           key={mission}
           phase={phase}
@@ -616,7 +642,7 @@ export default function App() {
           roverSpeed={roverSpeedMultiplier(rover.level, rover.damaged)}
           roverSize={roverSizeMultiplier(rover.level)}
           roverDamaged={rover.damaged}
-          inputLocked={inputLocked}
+          inputLocked={inputLocked || phase === "secret"}
           onReachCheckpoint={handleReachCheckpoint}
           targets={targets}
           guideTarget={guideTarget}
@@ -628,6 +654,7 @@ export default function App() {
           flagLabel={t.flag?.checkpoint || ""}
           skyLabels={t.sky}
           onFirstHop={() => showToast(t.sky.lowGravityTip)}
+          secretActive={phase === "playing" && !secretDone}
         />
       )}
       {onEarth && (
@@ -719,6 +746,34 @@ export default function App() {
           onOpenLog={() => {
             playSfx("click");
             setShowLog(true);
+          }}
+          secretBadge={secretDone}
+        />
+      )}
+
+      {/* Hidden wormhole quest */}
+      {phase === "secret" && (
+        <WormholeQuest
+          lang={lang}
+          play={t.play}
+          soundOn={soundOn}
+          locked={paused || showSettings || showHelp || showLog || showNasa}
+          onSfx={playSfx}
+          onStageChange={handleSecretStage}
+          onComplete={handleSecretComplete}
+          onPause={() => {
+            playSfx("click");
+            setPaused(true);
+          }}
+        />
+      )}
+      {phase === "playing" && secretAward && (
+        <SecretBadgeModal
+          lang={lang}
+          onClose={() => {
+            playSfx("click");
+            setSecretAward(false);
+            setRover(true);
           }}
         />
       )}
@@ -858,7 +913,7 @@ export default function App() {
         <EventModal key={eventIndex} t={t} eventIndex={eventIndex} onChoose={handleEventChoose} onClose={handleEventClose} onSfx={playSfx} />
       )}
 
-      {paused && phase === "playing" && (
+      {paused && (phase === "playing" || phase === "secret") && (
         <PauseOverlay
           t={t}
           onResume={() => {

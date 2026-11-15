@@ -182,17 +182,19 @@ export default function StartScreen({ t, onStartMars, onStartMoon, onOpenSetting
             <Sparkles className="w-4 h-4 text-sky-400" />
             <span>{t.nasaDataBtn}</span>
           </button>
-          <span className="hidden sm:inline px-3 py-1 rounded-full bg-slate-900/60 border border-white/10 text-[11px] font-bold text-slate-400 tracking-wider">
-            🌍 {t.menu.baseLabel}
-          </span>
+          <button
+            type="button"
+            onClick={onOpenCredits}
+            title={t.menu.credits}
+            aria-label={t.menu.credits}
+            className="w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center rounded-full bg-slate-900/75 hover:bg-slate-800/90 backdrop-blur-md border border-white/15 text-sky-300 transition shadow-lg"
+          >
+            <Users className="w-5 h-5" />
+          </button>
         </div>
 
         {view === "main" ? (
           <div key="main" className="my-auto flex flex-col items-center text-center w-full max-w-md mx-auto menu-fade-in">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-500/15 border border-sky-300/40 backdrop-blur-md text-sky-100 text-xs sm:text-sm font-bold mb-3 shadow">
-              <span>🚀</span>
-              <span>{t.heroTagline}</span>
-            </div>
             <h1 className="font-display text-4xl sm:text-6xl font-bold tracking-tight text-white drop-shadow-[0_4px_20px_rgba(0,0,0,0.65)] mb-2">
               {t.gameTitle}
             </h1>
@@ -201,7 +203,6 @@ export default function StartScreen({ t, onStartMars, onStartMoon, onOpenSetting
             <div className="flex flex-col gap-3 w-full">
               <MenuButton icon={Play} label={t.menu.startGame} onClick={() => go("missions")} primary />
               <MenuButton icon={Settings} label={t.settings} onClick={onOpenSettings} />
-              <MenuButton icon={Users} label={t.menu.credits} onClick={onOpenCredits} />
             </div>
           </div>
         ) : (

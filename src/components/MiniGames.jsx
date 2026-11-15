@@ -568,6 +568,13 @@ const AIM_TARGETS = {
     { x: 440, y: 175 },
     { x: 520, y: 175 },
   ],
+  // Alien treasure vault: four glowing lock gems around the door
+  vault: [
+    { x: 300, y: 110 },
+    { x: 500, y: 110 },
+    { x: 300, y: 250 },
+    { x: 500, y: 250 },
+  ],
 };
 
 // Background art for each aim scene
@@ -606,6 +613,17 @@ function AimArt({ scene }) {
         ))}
       </>
     );
+  if (scene === "vault")
+    return (
+      <>
+        <rect width="800" height="360" fill="#1e1b4b" />
+        <rect x="250" y="60" width="300" height="240" rx="26" fill="#312e81" stroke="#a78bfa" strokeWidth="6" />
+        <circle cx="400" cy="180" r="70" fill="#4c1d95" stroke="#c4b5fd" strokeWidth="6" />
+        <path d="M400 125 L400 235 M345 180 L455 180 M361 141 L439 219 M439 141 L361 219" stroke="#c4b5fd" strokeWidth="5" />
+        <circle cx="400" cy="180" r="18" fill="#fde047" style={loop("as-glow", 1.2)} />
+        <text x="400" y="45" textAnchor="middle" fontSize="20" fontWeight="900" fill="#e9d5ff">💎 ??? VAULT ???</text>
+      </>
+    );
   return (
     <>
       <rect x="250" y="120" width="300" height="150" rx="22" fill="#e2e8f0" stroke="#94a3b8" strokeWidth="4" />
@@ -618,6 +636,12 @@ function AimArt({ scene }) {
 
 // What an un-hit target looks like in each scene
 function AimTarget({ scene, x, y }) {
+  if (scene === "vault")
+    return (
+      <g transform={`translate(${x} ${y})`}>
+        <path d="M0 -20 L16 0 L0 20 L-16 0 Z" fill="#f0abfc" stroke="#a21caf" strokeWidth="3" style={loop("as-glow", 0.7)} />
+      </g>
+    );
   if (scene === "valves")
     return (
       <g transform={`translate(${x} ${y})`}>
